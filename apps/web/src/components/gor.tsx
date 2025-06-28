@@ -1,6 +1,6 @@
 import { useAnimations, useGLTF } from '@react-three/drei'
 import { useGraph } from '@react-three/fiber'
-import { useEffect, useMemo, useRef, type JSX } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, type JSX } from 'react'
 import * as THREE from 'three'
 import { SkeletonUtils, type GLTF } from 'three-stdlib'
 
@@ -22,18 +22,21 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-export default function Gor(props: JSX.IntrinsicElements['group']) {
+const Gor = forwardRef<THREE.Group, JSX.IntrinsicElements['group']>((props, ref) => {
   const group = useRef<THREE.Group>(null)
   const { scene, animations } = useGLTF('/gor-transformed.glb')
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { nodes, materials } = useGraph(clone) as unknown as GLTFResult
   const { actions } = useAnimations(animations, group)
 
+  // Expose the internal group ref to the parent via the forwarded ref
+  useImperativeHandle(ref, () => group.current as THREE.Group, [])
+
   useEffect(() => {
-    actions['breath']?.reset().fadeIn(0.5).play()
+    actions['swipe']?.reset().fadeIn(0.5).play()
 
     return () => {
-      actions['breath']?.fadeOut(0.5)
+      actions['swipe']?.fadeOut(0.5)
     }
   }, [actions])
 
@@ -41,15 +44,22 @@ export default function Gor(props: JSX.IntrinsicElements['group']) {
     <group ref={group} {...props} dispose={null}>
       <group name='Scene'>
         <group name='metarig' rotation={[-3.128, -0.02, -3.127]}>
-          <primitive object={nodes.spine} />
+          <primitive castShadow receiveShadow object={nodes.spine} />
           <primitive object={nodes.neutral_bone} />
-          <skinnedMesh name='textured_meshobj' geometry={nodes.textured_meshobj.geometry} skeleton={nodes.textured_meshobj.skeleton}>
+          <skinnedMesh
+            castShadow
+            receiveShadow
+            name='textured_meshobj'
+            geometry={nodes.textured_meshobj.geometry}
+            skeleton={nodes.textured_meshobj.skeleton}>
             <meshStandardMaterial map={materials.PBR_Material.map} roughness={1} metalness={0} />
           </skinnedMesh>
         </group>
       </group>
     </group>
   )
-}
+})
 
 useGLTF.preload('/gor-transformed.glb')
+
+export default Gor

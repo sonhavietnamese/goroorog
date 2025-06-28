@@ -1,0 +1,74 @@
+import prototype from '@/assets/textures/prototype.png'
+import { Box, CameraControls, KeyboardControls, useTexture } from '@react-three/drei'
+import { useFrame } from '@react-three/fiber'
+import { useRef } from 'react'
+import * as THREE from 'three'
+import type { BVHEcctrlApi } from './components/control'
+import BVHEcctrl, { StaticCollider } from './components/control'
+import Gor from './components/gor'
+import { useControlStore, type ControlState } from './stores/control'
+
+const KEYBOARD_MAP = [
+  { name: 'forward', keys: ['KeyW'] },
+  { name: 'backward', keys: ['KeyS'] },
+  { name: 'leftward', keys: ['KeyA'] },
+  { name: 'rightward', keys: ['KeyD'] },
+  { name: 'jump', keys: ['Space'] },
+  { name: 'run', keys: ['Shift'] },
+]
+
+export default function Game() {
+  const controlRef = useRef<BVHEcctrlApi | null>(null)
+  const camControlRef = useRef<CameraControls | null>(null)
+  const colliderMeshesArray = useControlStore((state: ControlState) => state.colliderMeshesArray)
+
+  const gor = useRef<THREE.Group | null>(null)
+
+  useFrame(() => {
+    if (controlRef.current && controlRef.current.group && camControlRef.current)
+      camControlRef.current.moveTo(
+        controlRef.current.group.position.x,
+        controlRef.current.group.position.y,
+        controlRef.current.group.position.z,
+        true,
+      )
+  })
+
+  return (
+    <>
+      <color attach='background' args={['#000000']} />
+      <fog attach='fog' args={['#000000', 10, 150]} />
+
+      <ambientLight intensity={2} />
+      <directionalLight position={[1, 5, 1]} intensity={1} castShadow />
+
+      <Gor scale={10} position={[0, -0.5, 0]} ref={gor} />
+
+      <CameraControls ref={camControlRef} smoothTime={0.1} colliderMeshes={colliderMeshesArray} makeDefault />
+
+      <KeyboardControls map={KEYBOARD_MAP}>
+        <BVHEcctrl debug ref={controlRef} maxWalkSpeed={10} maxRunSpeed={20} jumpVel={20} counterVelFactor={0} deceleration={100} acceleration={100}>
+          <Box />
+        </BVHEcctrl>
+      </KeyboardControls>
+
+      <StaticCollider>
+        <Ground />
+      </StaticCollider>
+    </>
+  )
+}
+
+function Ground() {
+  const texture = useTexture(prototype)
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping
+  texture.repeat.set(40, 40)
+  texture.offset.set(0, 0)
+
+  return (
+    <mesh position={[0, -0.5, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+      <planeGeometry args={[200, 200]} />
+      <meshStandardMaterial map={texture} />
+    </mesh>
+  )
+}
