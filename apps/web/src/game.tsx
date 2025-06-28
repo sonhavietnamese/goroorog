@@ -1,12 +1,12 @@
 import prototype from '@/assets/textures/prototype.png'
+import type { BVHEcctrlApi } from '@/components/control'
+import BVHEcctrl, { StaticCollider } from '@/components/control'
+import Gor from '@/components/gor'
+import { useControlStore, type ControlState } from '@/stores/control'
 import { Box, CameraControls, KeyboardControls, useTexture } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { useRef } from 'react'
 import * as THREE from 'three'
-import type { BVHEcctrlApi } from './components/control'
-import BVHEcctrl, { StaticCollider } from './components/control'
-import Gor from './components/gor'
-import { useControlStore, type ControlState } from './stores/control'
 
 const KEYBOARD_MAP = [
   { name: 'forward', keys: ['KeyW'] },

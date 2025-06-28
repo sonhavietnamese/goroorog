@@ -1,7 +1,8 @@
 import sampleHealthbar from '@/assets/sample-healthbar.png'
 import sampleLeaderboard from '@/assets/sample-leaderboard.png'
+import CommandInputManager from '@/components/command-input-manager'
+import Game from '@/game'
 import { Canvas } from '@react-three/fiber'
-import Game from './game'
 
 export default function App() {
   return (
@@ -30,6 +31,8 @@ function Hud() {
       <div className='absolute top-10 right-10'>
         <img src={sampleLeaderboard} draggable={false} className='w-[400px]' />
       </div>
+
+      <CommandInputManager />
     </section>
   )
 }

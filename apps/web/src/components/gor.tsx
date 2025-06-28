@@ -29,7 +29,6 @@ const Gor = forwardRef<THREE.Group, JSX.IntrinsicElements['group']>((props, ref)
   const { nodes, materials } = useGraph(clone) as unknown as GLTFResult
   const { actions } = useAnimations(animations, group)
 
-  // Expose the internal group ref to the parent via the forwarded ref
   useImperativeHandle(ref, () => group.current as THREE.Group, [])
 
   useEffect(() => {
