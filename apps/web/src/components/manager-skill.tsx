@@ -8,8 +8,6 @@ import VFXS from './vfxs'
 
 export const ManagerSkill = ({ ...props }) => {
   const update = useMagic((state) => state.update)
-  // const skill = useMagic((state) => state.skill)
-  // const addSkill = useMagic((state) => state.addSkill)
 
   const pointerPosition = useRef(new THREE.Vector3(0, 0.001, 0))
   const pointer = useRef<THREE.Mesh>(null)

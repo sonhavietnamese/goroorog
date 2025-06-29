@@ -22,7 +22,7 @@ export default function Game() {
     if (controlRef.current && controlRef.current.group && camControlRef.current)
       camControlRef.current.moveTo(
         controlRef.current.group.position.x,
-        controlRef.current.group.position.y,
+        controlRef.current.group.position.y + 3,
         controlRef.current.group.position.z,
         true,
       )
@@ -31,7 +31,7 @@ export default function Game() {
   return (
     <>
       <color attach='background' args={['#000000']} />
-      <fog attach='fog' args={['#000000', 10, 150]} />
+      {/* <fog attach='fog' args={['#000000', 10, 150]} /> */}
 
       <ambientLight intensity={2} />
       <directionalLight position={[1, 5, 1]} intensity={1} castShadow shadow-mapSize-width={512} shadow-mapSize-height={512} />
@@ -41,7 +41,7 @@ export default function Game() {
       <CameraControls ref={camControlRef} smoothTime={0.1} colliderMeshes={colliderMeshesArray} makeDefault />
 
       <KeyboardControls map={KEYBOARD_MAP}>
-        <BVHEcctrl ref={controlRef} maxWalkSpeed={10} maxRunSpeed={20} jumpVel={20} counterVelFactor={0} deceleration={100} acceleration={100}>
+        <BVHEcctrl ref={controlRef} maxWalkSpeed={10} maxRunSpeed={20} jumpVel={10} counterVelFactor={0} deceleration={100} acceleration={100}>
           <Bana />
         </BVHEcctrl>
       </KeyboardControls>

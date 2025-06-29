@@ -1,8 +1,8 @@
-import Game from '@/game'
-import { Canvas } from '@react-three/fiber'
 import Hud from '@/components/hud'
+import ProviderWallet from '@/components/provider-wallet'
+import Game from '@/game'
 import { PositionalAudio } from '@react-three/drei'
-import ProviderWallet from './components/provider-wallet'
+import { Canvas } from '@react-three/fiber'
 
 export default function App() {
   return (

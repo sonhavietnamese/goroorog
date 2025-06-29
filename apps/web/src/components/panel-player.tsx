@@ -3,7 +3,7 @@ import { formatWalletAddress } from '@/libs/utils'
 import { useWallet } from '@solana/wallet-adapter-react'
 
 export default function PanelPlayer() {
-  const { publicKey, connected } = useWallet()
+  const { publicKey, connected, disconnect } = useWallet()
 
   if (!connected) return null
 
@@ -22,6 +22,10 @@ export default function PanelPlayer() {
           <div className='w-full h-full bg-[#FCC86E] rounded-full origin-left scale-x-[0.7]'></div>
         </div>
       </div>
+
+      <button className='absolute bottom-0 left-1/2 -translate-x-1/2' onClick={() => disconnect()}>
+        <span className='underline text-white text-2xl'>Disconnect</span>
+      </button>
     </div>
   )
 }

@@ -1,10 +1,21 @@
 import { useGLTF, useTexture } from '@react-three/drei'
 import VFXParticles from './vfx-particles'
 import { RenderMode } from '@/types'
+import { type GLTF } from 'three-stdlib'
+import * as THREE from 'three'
+
+type IcicleGLTFResult = GLTF & {
+  nodes: {
+    icicle: THREE.Mesh
+  }
+  materials: {
+    Material: THREE.MeshStandardMaterial
+  }
+}
 
 export default function VFXS() {
   const texture = useTexture('textures/magic_01.png')
-  const { nodes } = useGLTF('/models/Icicle.glb')
+  const { nodes } = useGLTF('/models/Icicle.glb') as unknown as IcicleGLTFResult
 
   return (
     <>
