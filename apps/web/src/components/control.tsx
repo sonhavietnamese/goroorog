@@ -997,9 +997,9 @@ export default React.memo(BVHEcctrl)
 /**
  * Export values/features/functions
  */
-export { default as InstancedStaticCollider } from './instanced-static-collider'
-export { default as StaticCollider } from './static-collider'
-export type { StaticColliderProps } from './static-collider'
+export { default as InstancedStaticCollider } from './collider-instanced-static'
+export { default as StaticCollider } from './collider-static'
+export type { StaticColliderProps } from './collider-static'
 
 /**
  * Export ecctrl types

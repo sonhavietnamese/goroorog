@@ -34,7 +34,7 @@ export default function Game() {
       <fog attach='fog' args={['#000000', 10, 150]} />
 
       <ambientLight intensity={2} />
-      <directionalLight position={[1, 5, 1]} intensity={1} castShadow shadow-mapSize-width={128} shadow-mapSize-height={128} />
+      <directionalLight position={[1, 5, 1]} intensity={1} castShadow shadow-mapSize-width={512} shadow-mapSize-height={512} />
 
       <Boss />
 

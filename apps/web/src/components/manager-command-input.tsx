@@ -7,12 +7,14 @@ import * as THREE from 'three'
 
 export default function ManagerCommandInput() {
   const [combos, setCombos] = useState<Arrow[]>([])
-  // const skills = useMagic((state) => state.skills)
   const addSkill = useMagic((state) => state.addSkill)
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      // Ignore if not an arrow key
+      if (event.key === 'Backspace') {
+        setCombos([])
+      }
+
       if (!Object.values(ARROWS).some((arrow) => arrow.id === event.key)) {
         return
       }
@@ -24,10 +26,6 @@ export default function ManagerCommandInput() {
           const newCombos = [...prev, arrow]
           return newCombos.length > MAX_COMBO_LENGTH ? newCombos.slice(-MAX_COMBO_LENGTH) : newCombos
         })
-      }
-
-      if (event.key === 'Backspace') {
-        setCombos([])
       }
     }
 
