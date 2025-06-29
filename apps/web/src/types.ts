@@ -1,3 +1,5 @@
+import type { Vector3 } from 'three'
+
 export enum SkillType {
   Attack = 'attack',
   Defense = 'defense',
@@ -15,6 +17,10 @@ export type Skill = {
   name: string
   description: string
   combo: Arrow[]
+  duration: number
+  colors: string[]
+  position?: Vector3
+  timestamp?: number
 }
 
 export enum AppearanceMode {

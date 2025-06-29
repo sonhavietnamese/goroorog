@@ -1,4 +1,5 @@
 import { SkillType, type Skill } from '@/types'
+import * as THREE from 'three'
 
 export const ARROWS = {
   up: {
@@ -30,6 +31,9 @@ export const SKILLS: Skill[] = [
     name: 'Punch',
     description: 'A basic punch',
     combo: [ARROWS.up, ARROWS.up, ARROWS.left, ARROWS.right, ARROWS.down],
+    duration: 1000,
+    colors: ['#d1beff', 'white'],
+    position: new THREE.Vector3(0, 0, 0),
   },
   {
     id: 'atk-002',
@@ -37,6 +41,19 @@ export const SKILLS: Skill[] = [
     name: 'Kick',
     description: 'A basic kick',
     combo: [ARROWS.down, ARROWS.down, ARROWS.left, ARROWS.right, ARROWS.up],
+    duration: 500,
+    colors: ['skyblue', 'white'],
+    position: new THREE.Vector3(0, 0, 0),
+  },
+  {
+    id: 'atk-003',
+    type: SkillType.Attack,
+    name: 'Fireball',
+    description: 'A basic fireball',
+    combo: [ARROWS.up, ARROWS.down, ARROWS.up, ARROWS.down, ARROWS.right],
+    duration: 500,
+    colors: ['orange', 'red'],
+    position: new THREE.Vector3(0, 0, 0),
   },
 ]
 

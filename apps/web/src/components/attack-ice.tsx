@@ -11,10 +11,12 @@ export default function AttackIce({ ...props }) {
   const blastAudio = useRef<THREE.PositionalAudio>(null)
   const time = useRef(0)
 
+  const size = 2
+
   useFrame((_, delta) => {
     time.current += delta
     if (spellEmitter.current) {
-      spellEmitter.current.position.y = Math.cos(time.current * Math.PI) * 5
+      spellEmitter.current.position.y = Math.cos(time.current * Math.PI) * 20 * size
     }
   })
 
@@ -57,7 +59,7 @@ export default function AttackIce({ ...props }) {
           rotationSpeedMax: [0, 0, 1],
           colorStart: ['skyblue'],
           colorEnd: ['skyblue'],
-          size: [1, 1],
+          size: [5 * size, 5 * size],
         }}
       />
 
@@ -82,7 +84,7 @@ export default function AttackIce({ ...props }) {
           rotationSpeedMax: [0, 0, 0],
           colorStart: ['white', 'skyblue'],
           colorEnd: ['white'],
-          size: [0.05, 0.2],
+          size: [0.25 * size, 1 * size],
         }}>
         <VFXEmitter
           emitter='sparks'
@@ -104,7 +106,7 @@ export default function AttackIce({ ...props }) {
             rotationSpeedMax: [0, 0, 0],
             colorStart: ['white', 'skyblue'],
             colorEnd: ['white', 'skyblue'],
-            size: [0.01, 0.1],
+            size: [0.05 * size, 0.5 * size],
           }}
         />
       </VFXEmitter>
@@ -130,7 +132,7 @@ export default function AttackIce({ ...props }) {
           rotationSpeedMax: [0, 0, 0],
           colorStart: ['white', 'skyblue'],
           colorEnd: ['white', 'skyblue'],
-          size: [0.01, 0.1],
+          size: [0.05 * size, 0.5 * size],
         }}
       />
       <VFXEmitter
@@ -142,8 +144,8 @@ export default function AttackIce({ ...props }) {
           nbParticles: 5,
           spawnMode: 'burst',
           loop: false,
-          startPositionMin: [-0.5, 0, -0.5],
-          startPositionMax: [0.5, 0, 0.5],
+          startPositionMin: [-3 * size, 0, -3 * size],
+          startPositionMax: [3 * size, 0, 3 * size],
           startRotationMin: [degToRad(180 - 20), 0, degToRad(-30)],
           startRotationMax: [degToRad(180 + 20), 0, degToRad(30)],
           particlesLifetime: [1, 1],
@@ -154,7 +156,7 @@ export default function AttackIce({ ...props }) {
           rotationSpeedMax: [0, 0, 0],
           colorStart: ['skyblue', 'white'],
           colorEnd: ['skyblue', 'white'],
-          size: [0.5, 1],
+          size: [2.5 * size, 5 * size],
         }}
       />
     </group>

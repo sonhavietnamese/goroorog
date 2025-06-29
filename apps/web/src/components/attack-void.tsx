@@ -7,6 +7,8 @@ export default function AttackVoid({ ...props }) {
   const blastAudio = useRef<THREE.PositionalAudio>(null)
   const gravityAudio = useRef<THREE.PositionalAudio>(null)
 
+  const size = 1
+
   useEffect(() => {
     const blastTimeout = setTimeout(() => {
       if (blastAudio.current) {
@@ -55,7 +57,7 @@ export default function AttackVoid({ ...props }) {
           rotationSpeedMax: [0, 0, 0],
           colorStart: ['#4902ff'],
           colorEnd: ['#ffffff'],
-          size: [0.1, 0.4],
+          size: [0.5 * size, 2 * size],
         }}
       />
       <VFXEmitter
@@ -78,7 +80,7 @@ export default function AttackVoid({ ...props }) {
           rotationSpeedMax: [0, 10, 0],
           colorStart: ['#5b18ff'],
           colorEnd: ['#d1beff'],
-          size: [0.5, 0.5],
+          size: [2.5 * size, 2.5 * size],
         }}
       />
       <VFXEmitter
@@ -103,7 +105,7 @@ export default function AttackVoid({ ...props }) {
           rotationSpeedMax: [0, 0, 5],
           colorStart: ['#ff9fed', '#e885ff'],
           colorEnd: ['#ffffff', '#ffffff'],
-          size: [1, 1],
+          size: [5 * size, 5 * size],
         }}
       />
 
@@ -121,14 +123,14 @@ export default function AttackVoid({ ...props }) {
           startRotationMin: [0, 0, 0],
           startRotationMax: [0, 0, 0],
           particlesLifetime: [0.1, 1],
-          speed: [2, 8],
+          speed: [2, 20],
           directionMin: [-1, 0, -1],
           directionMax: [1, 1, 1],
           rotationSpeedMin: [0, 0, 0],
           rotationSpeedMax: [0, 0, 0],
           colorStart: ['#ffffff', '#d1beff'],
           colorEnd: ['#ffffff', '#5b18ff'],
-          size: [0.05, 0.1],
+          size: [2 * size, 2 * size],
         }}
       />
     </group>

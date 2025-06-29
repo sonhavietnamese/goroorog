@@ -1,14 +1,15 @@
 import prototype from '@/assets/textures/prototype.png'
+import Boss from '@/components/boss'
 import type { BVHEcctrlApi } from '@/components/control'
 import BVHEcctrl, { StaticCollider } from '@/components/control'
-import Boss from '@/components/boss'
 import { useControlStore, type ControlState } from '@/stores/control'
-import { Box, CameraControls, KeyboardControls, useTexture } from '@react-three/drei'
+import { CameraControls, KeyboardControls, useTexture } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
+import { Bloom, EffectComposer } from '@react-three/postprocessing'
 import { useRef } from 'react'
 import * as THREE from 'three'
-import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import { Magic } from './components/magic'
+import Bana from './components/Bana'
 
 const KEYBOARD_MAP = [
   { name: 'forward', keys: ['KeyW'] },
@@ -37,7 +38,7 @@ export default function Game() {
   return (
     <>
       <color attach='background' args={['#000000']} />
-      {/* <fog attach='fog' args={['#000000', 10, 150]} /> */}
+      <fog attach='fog' args={['#000000', 10, 150]} />
 
       <ambientLight intensity={2} />
       <directionalLight position={[1, 5, 1]} intensity={1} castShadow shadow-mapSize-width={128} shadow-mapSize-height={128} />
@@ -48,7 +49,8 @@ export default function Game() {
 
       <KeyboardControls map={KEYBOARD_MAP}>
         <BVHEcctrl debug ref={controlRef} maxWalkSpeed={10} maxRunSpeed={20} jumpVel={20} counterVelFactor={0} deceleration={100} acceleration={100}>
-          <Box />
+          {/* <Box /> */}
+          <Bana />
         </BVHEcctrl>
       </KeyboardControls>
 
@@ -57,7 +59,7 @@ export default function Game() {
       </StaticCollider>
 
       <EffectComposer>
-        <Bloom intensity={1.2} luminanceThreshold={1} mipmapBlur />
+        <Bloom intensity={1.1} luminanceThreshold={1} mipmapBlur />
       </EffectComposer>
 
       <Magic />

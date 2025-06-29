@@ -10,10 +10,12 @@ export default function AttackFire({ ...props }) {
   const blastAudio = useRef<THREE.PositionalAudio>(null)
   const time = useRef(0)
 
+  const size = 2
+
   useFrame((_, delta) => {
     time.current += delta
     if (spellEmitter.current) {
-      spellEmitter.current.position.y = Math.cos(time.current * Math.PI) * 5
+      spellEmitter.current.position.y = Math.cos(time.current * Math.PI) * 20 * size
     }
   })
 
@@ -55,7 +57,7 @@ export default function AttackFire({ ...props }) {
           rotationSpeedMax: [0, 0, 0],
           colorStart: ['red', 'orange', 'yellow'],
           colorEnd: ['red'],
-          size: [0.05, 0.2],
+          size: [0.25 * size, 1 * size],
         }}>
         <VFXEmitter
           emitter='sparks'
@@ -77,7 +79,7 @@ export default function AttackFire({ ...props }) {
             rotationSpeedMax: [0, 0, 0],
             colorStart: ['red', 'orange'],
             colorEnd: ['red', 'orange'],
-            size: [0.01, 0.1],
+            size: [0.1 * size, 1 * size],
           }}
         />
       </VFXEmitter>
@@ -103,7 +105,7 @@ export default function AttackFire({ ...props }) {
           rotationSpeedMax: [0, 0, 5],
           colorStart: ['yellow'],
           colorEnd: ['red'],
-          size: [1, 1],
+          size: [5 * size, 5 * size],
         }}
       />
 
@@ -128,7 +130,7 @@ export default function AttackFire({ ...props }) {
           rotationSpeedMax: [0, 0, 0],
           colorStart: ['red', 'orange'],
           colorEnd: ['red', 'orange'],
-          size: [0.01, 0.16],
+          size: [0.1 * size, 1 * size],
         }}
       />
     </group>

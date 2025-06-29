@@ -6,17 +6,6 @@ import React, { forwardRef, Suspense, useCallback, useImperativeHandle, useMemo,
 import * as THREE from 'three'
 import { clamp } from 'three/src/math/MathUtils.js'
 
-const characterStatus = {
-  position: new THREE.Vector3(),
-  linvel: new THREE.Vector3(),
-  quaternion: new THREE.Quaternion(),
-  inputDir: new THREE.Vector3(),
-  movingDir: new THREE.Vector3(),
-  isOnGround: false,
-  isOnMovingPlatform: false,
-  animationStatus: 'IDLE',
-}
-
 const BVHEcctrl = forwardRef<BVHEcctrlApi, EcctrlProps>(
   (
     {
@@ -259,23 +248,6 @@ const BVHEcctrl = forwardRef<BVHEcctrlApi, EcctrlProps>(
       }
     }, [])
 
-    /**
-     * Get camera azimuthal angle funtion
-     */
-    // const getAzimuthalAngle = useCallback((camera: THREE.Camera, upAxis: THREE.Vector3): number => {
-    //     camera.getWorldDirection(camViewDir.current);
-    //     camProjDir.current.copy(camViewDir.current).projectOnPlane(upAxis).normalize();
-    //     camRefDir.current.copy(constRefDir).projectOnPlane(upAxis).normalize();
-    //     let angle = Math.acos(clamp(camRefDir.current.dot(camProjDir.current), -1, 1));
-    //     crossVec.current.crossVectors(camRefDir.current, camProjDir.current);
-    //     if (crossVec.current.dot(upAxis) < 0) angle = -angle;
-    //     return angle;
-    // }, [])
-
-    /**
-     * Get input direction function
-     * Getting Character moving direction from user inputs
-     */
     const setInputDirection = useCallback(
       (dir: { forward?: boolean; backward?: boolean; leftward?: boolean; rightward?: boolean; joystick?: THREE.Vector2 }) => {
         // Reset inputDir.current
@@ -764,16 +736,25 @@ const BVHEcctrl = forwardRef<BVHEcctrlApi, EcctrlProps>(
       }
     }, [])
     const updateCharacterStatus = useCallback((run: boolean, jump: boolean) => {
+      const position = new THREE.Vector3()
+      const quaternion = new THREE.Quaternion()
+
       // Control status
-      characterModelRef.current?.getWorldPosition(characterStatus.position)
-      characterModelRef.current?.getWorldQuaternion(characterStatus.quaternion)
-      characterStatus.linvel.copy(currentLinVel.current)
-      characterStatus.inputDir.copy(inputDir.current)
-      characterStatus.movingDir.copy(movingDir.current)
-      characterStatus.isOnGround = isOnGround.current
-      characterStatus.isOnMovingPlatform = isOnMovingPlatform.current
-      // Animation status
-      characterStatus.animationStatus = updateCharacterAnimation(run, jump)
+      characterModelRef.current?.getWorldPosition(position)
+      characterModelRef.current?.getWorldQuaternion(quaternion)
+
+      // Update store with new character status
+      useControlStore.getState().setCharacterStatus({
+        position,
+        quaternion,
+        linvel: currentLinVel.current.clone(),
+        inputDir: inputDir.current.clone(),
+        movingDir: movingDir.current.clone(),
+        isOnGround: isOnGround.current,
+        isOnMovingPlatform: isOnMovingPlatform.current,
+        animationStatus: updateCharacterAnimation(run, jump),
+      })
+
       prevIsOnGround.current = isOnGround.current
     }, [])
 

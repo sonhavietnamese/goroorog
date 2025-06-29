@@ -1,13 +1,22 @@
 import { ARROWS, MAX_COMBO_LENGTH, SKILLS } from '@/configs/skills'
-import type { Arrow, Skill } from '@/types'
+import { useMagic } from '@/hooks/use-magic'
+import { randomInRange } from '@/libs/utils'
+import type { Arrow } from '@/types'
 import { useEffect, useState } from 'react'
+import * as THREE from 'three'
 
 export default function CommandInputManager() {
   const [combos, setCombos] = useState<Arrow[]>([])
-  const [skill, setSkill] = useState<Skill | null>(null)
+  // const skills = useMagic((state) => state.skills)
+  const addSkill = useMagic((state) => state.addSkill)
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      // Ignore if not an arrow key
+      if (!Object.values(ARROWS).some((arrow) => arrow.id === event.key)) {
+        return
+      }
+
       const arrow = Object.values(ARROWS).find((arrow) => arrow.id === event.key)
 
       if (arrow) {
@@ -31,9 +40,22 @@ export default function CommandInputManager() {
 
   useEffect(() => {
     if (combos.length === MAX_COMBO_LENGTH) {
-      const skill = SKILLS.find((skill) => skill.combo.every((arrow) => combos.includes(arrow)))
-      if (skill) {
-        setSkill(skill)
+      const validSkill = SKILLS.find((skill) => {
+        for (let i = 0; i < combos.length; i++) {
+          if (skill.combo[i].id !== combos[i].id) return false
+        }
+        return true
+      })
+
+      if (validSkill) {
+        const timestamp = Date.now()
+
+        addSkill({
+          ...validSkill,
+          id: `${validSkill.id}-${timestamp}`,
+          position: new THREE.Vector3(randomInRange(-5, 5), 0, randomInRange(-5, 5)),
+          timestamp,
+        })
       }
 
       setCombos([])

@@ -1,12 +1,12 @@
 import Game from '@/game'
 import { Canvas } from '@react-three/fiber'
-// import Hud from '@/components/hud'
+import Hud from '@/components/hud'
 import { PositionalAudio } from '@react-three/drei'
 
 export default function App() {
   return (
     <main className='w-dvw h-dvh bg-black'>
-      {/* <Hud /> */}
+      <Hud />
       <Canvas
         shadows
         camera={{

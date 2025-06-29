@@ -15,7 +15,7 @@ export default function Hud() {
         <img src={sampleLeaderboard} draggable={false} className='w-[400px]' />
       </div>
 
-      <div className='absolute bottom-10 flex items-center flex-col gap-2 left-1/2 -translate-x-1/2 pointer-events-auto'>
+      {/* <div className='absolute bottom-10 flex items-center flex-col gap-2 left-1/2 -translate-x-1/2 pointer-events-auto'>
         <button className='w-[400px] origin-bottom-left cursor-pointer group hover:mix-blend-difference'>
           <img
             src={connectButton}
@@ -24,7 +24,7 @@ export default function Hud() {
           />
         </button>
         <img src={howtoplay} draggable={false} className='w-[360px]' />
-      </div>
+      </div> */}
 
       <div className='absolute bottom-10 left-10'>
         <img src={samplePanel} draggable={false} className='w-[300px]' />
