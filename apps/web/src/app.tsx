@@ -1,13 +1,12 @@
-import sampleHealthbar from '@/assets/sample-healthbar.png'
-import sampleLeaderboard from '@/assets/sample-leaderboard.png'
-import CommandInputManager from '@/components/command-input-manager'
 import Game from '@/game'
 import { Canvas } from '@react-three/fiber'
+// import Hud from '@/components/hud'
+import { PositionalAudio } from '@react-three/drei'
 
 export default function App() {
   return (
     <main className='w-dvw h-dvh bg-black'>
-      <Hud />
+      {/* <Hud /> */}
       <Canvas
         shadows
         camera={{
@@ -17,22 +16,20 @@ export default function App() {
           position: [-30, 20, 30],
         }}>
         <Game />
+        <Preloader />
       </Canvas>
     </main>
   )
 }
 
-function Hud() {
-  return (
-    <section className='w-full h-full flex flex-col pointer-events-none items-center justify-center absolute top-0 left-0 z-[1]'>
-      <div className='absolute top-5 left-1/2 -translate-x-1/2'>
-        <img src={sampleHealthbar} draggable={false} className='w-[600px]' />
-      </div>
-      <div className='absolute top-10 right-10'>
-        <img src={sampleLeaderboard} draggable={false} className='w-[400px]' />
-      </div>
+const sfxs = ['/sfxs/fire.mp3', '/sfxs/freeze.mp3', '/sfxs/buildup.mp3', '/sfxs/gravity.mp3', '/sfxs/blast.mp3']
 
-      <CommandInputManager />
-    </section>
+const Preloader = () => {
+  return (
+    <>
+      {sfxs.map((url) => (
+        <PositionalAudio url={url} autoplay={false} key={url} />
+      ))}
+    </>
   )
 }

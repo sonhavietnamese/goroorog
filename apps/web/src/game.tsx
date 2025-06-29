@@ -1,12 +1,14 @@
 import prototype from '@/assets/textures/prototype.png'
 import type { BVHEcctrlApi } from '@/components/control'
 import BVHEcctrl, { StaticCollider } from '@/components/control'
-import Gor from '@/components/gor'
+import Boss from '@/components/boss'
 import { useControlStore, type ControlState } from '@/stores/control'
 import { Box, CameraControls, KeyboardControls, useTexture } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { useRef } from 'react'
 import * as THREE from 'three'
+import { EffectComposer, Bloom } from '@react-three/postprocessing'
+import { Magic } from './components/magic'
 
 const KEYBOARD_MAP = [
   { name: 'forward', keys: ['KeyW'] },
@@ -22,8 +24,6 @@ export default function Game() {
   const camControlRef = useRef<CameraControls | null>(null)
   const colliderMeshesArray = useControlStore((state: ControlState) => state.colliderMeshesArray)
 
-  const gor = useRef<THREE.Group | null>(null)
-
   useFrame(() => {
     if (controlRef.current && controlRef.current.group && camControlRef.current)
       camControlRef.current.moveTo(
@@ -37,12 +37,12 @@ export default function Game() {
   return (
     <>
       <color attach='background' args={['#000000']} />
-      <fog attach='fog' args={['#000000', 10, 150]} />
+      {/* <fog attach='fog' args={['#000000', 10, 150]} /> */}
 
       <ambientLight intensity={2} />
-      <directionalLight position={[1, 5, 1]} intensity={1} castShadow />
+      <directionalLight position={[1, 5, 1]} intensity={1} castShadow shadow-mapSize-width={128} shadow-mapSize-height={128} />
 
-      <Gor scale={10} position={[0, -0.5, 0]} ref={gor} />
+      <Boss />
 
       <CameraControls ref={camControlRef} smoothTime={0.1} colliderMeshes={colliderMeshesArray} makeDefault />
 
@@ -55,6 +55,12 @@ export default function Game() {
       <StaticCollider>
         <Ground />
       </StaticCollider>
+
+      <EffectComposer>
+        <Bloom intensity={1.2} luminanceThreshold={1} mipmapBlur />
+      </EffectComposer>
+
+      <Magic />
     </>
   )
 }

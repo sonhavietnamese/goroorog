@@ -41,19 +41,17 @@ const Gor = forwardRef<THREE.Group, JSX.IntrinsicElements['group']>((props, ref)
 
   return (
     <group ref={group} {...props} dispose={null}>
-      <group name='Scene'>
-        <group name='metarig' rotation={[-3.128, -0.02, -3.127]}>
-          <primitive castShadow receiveShadow object={nodes.spine} />
-          <primitive object={nodes.neutral_bone} />
-          <skinnedMesh
-            castShadow
-            receiveShadow
-            name='textured_meshobj'
-            geometry={nodes.textured_meshobj.geometry}
-            skeleton={nodes.textured_meshobj.skeleton}>
-            <meshStandardMaterial map={materials.PBR_Material.map} roughness={1} metalness={0} />
-          </skinnedMesh>
-        </group>
+      <group name='metarig' rotation={[-3.128, -0.02, -3.127]}>
+        <primitive castShadow receiveShadow object={nodes.spine} />
+        <primitive object={nodes.neutral_bone} />
+        <skinnedMesh
+          castShadow
+          receiveShadow
+          name='textured_meshobj'
+          geometry={nodes.textured_meshobj.geometry}
+          skeleton={nodes.textured_meshobj.skeleton}>
+          <meshStandardMaterial map={materials.PBR_Material.map} roughness={1} metalness={0} />
+        </skinnedMesh>
       </group>
     </group>
   )
