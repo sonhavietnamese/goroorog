@@ -1,8 +1,10 @@
 import sampleHealthbar from '@/assets/sample-healthbar.png'
 import ButtonConnect from './button-connect'
 import ManagerCommandInput from './manager-command-input'
-import PanelPlayer from './panel-player'
 import PanelLeaderboard from './panel-leaderboard'
+import PanelPlayer from './panel-player'
+import PanelSkillInformation from './panel-skill-information'
+import PanelStats from './panel-stats'
 
 export default function Hud() {
   return (
@@ -17,9 +19,9 @@ export default function Hud() {
 
       <PanelPlayer />
 
-      {/* <div className='absolute bottom-10 left-10'>
-        <img src={samplePanel} draggable={false} className='w-[300px]' />
-      </div> */}
+      <PanelStats />
+
+      <PanelSkillInformation />
 
       <div className='absolute bottom-10 left-10'></div>
       <ManagerCommandInput />

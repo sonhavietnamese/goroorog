@@ -32,10 +32,10 @@ const Gor = forwardRef<THREE.Group, JSX.IntrinsicElements['group']>((props, ref)
   useImperativeHandle(ref, () => group.current as THREE.Group, [])
 
   useEffect(() => {
-    actions['swipe']?.reset().fadeIn(0.5).play()
+    actions['idle']?.reset().fadeIn(0.5).play()
 
     return () => {
-      actions['swipe']?.fadeOut(0.5)
+      actions['idle']?.fadeOut(0.5)
     }
   }, [actions])
 
