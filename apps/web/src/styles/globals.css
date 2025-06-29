@@ -1,5 +1,18 @@
 @import 'tailwindcss';
 
+@font-face {
+  font-family: 'TwinMarker';
+  src: url('/fonts/TwinMarker.ttf') format('truetype');
+}
+
+:root {
+  --font-twin-marker: 'TwinMarker', sans-serif;
+}
+
+* {
+  font-family: var(--font-twin-marker);
+}
+
 @layer base {
   button {
     outline: none;
@@ -7,5 +20,170 @@
 
   button:active {
     rotate: -10deg;
+  }
+}
+
+@layer utilities {
+  /* OUTSIDE STROKE - True external stroke using text-shadow */
+  .text-stroke-outside-white {
+    text-shadow:
+      -2px -2px 0 white,
+      2px -2px 0 white,
+      -2px 2px 0 white,
+      2px 2px 0 white,
+      -2px 0 0 white,
+      2px 0 0 white,
+      0 -2px 0 white,
+      0 2px 0 white;
+  }
+
+  .text-player-panel {
+    text-shadow:
+      -2px -2px 0 #c143ab,
+      2px -2px 0 #c143ab,
+      -2px 2px 0 #c143ab,
+      2px 2px 0 #c143ab,
+      -2px 0 0 #c143ab,
+      2px 0 0 #c143ab,
+      0 -2px 0 #c143ab,
+      0 2px 0 #c143ab;
+  }
+
+  .text-stroke-outside-black {
+    text-shadow:
+      -2px -2px 0 black,
+      2px -2px 0 black,
+      -2px 2px 0 black,
+      2px 2px 0 black,
+      -2px 0 0 black,
+      2px 0 0 black,
+      0 -2px 0 black,
+      0 2px 0 black;
+  }
+
+  .text-stroke-outside-red {
+    text-shadow:
+      -2px -2px 0 red,
+      2px -2px 0 red,
+      -2px 2px 0 red,
+      2px 2px 0 red,
+      -2px 0 0 red,
+      2px 0 0 red,
+      0 -2px 0 red,
+      0 2px 0 red;
+  }
+
+  .text-stroke-outside-blue {
+    text-shadow:
+      -2px -2px 0 blue,
+      2px -2px 0 blue,
+      -2px 2px 0 blue,
+      2px 2px 0 blue,
+      -2px 0 0 blue,
+      2px 0 0 blue,
+      0 -2px 0 blue,
+      0 2px 0 blue;
+  }
+
+  .text-stroke-outside-yellow {
+    text-shadow:
+      -2px -2px 0 yellow,
+      2px -2px 0 yellow,
+      -2px 2px 0 yellow,
+      2px 2px 0 yellow,
+      -2px 0 0 yellow,
+      2px 0 0 yellow,
+      0 -2px 0 yellow,
+      0 2px 0 yellow;
+  }
+
+  /* Different outside stroke widths */
+  .text-stroke-outside-thin {
+    text-shadow:
+      -1px -1px 0 currentColor,
+      1px -1px 0 currentColor,
+      -1px 1px 0 currentColor,
+      1px 1px 0 currentColor,
+      -1px 0 0 currentColor,
+      1px 0 0 currentColor,
+      0 -1px 0 currentColor,
+      0 1px 0 currentColor;
+  }
+
+  .text-stroke-outside-thick {
+    text-shadow:
+      -3px -3px 0 currentColor,
+      3px -3px 0 currentColor,
+      -3px 3px 0 currentColor,
+      3px 3px 0 currentColor,
+      -3px 0 0 currentColor,
+      3px 0 0 currentColor,
+      0 -3px 0 currentColor,
+      0 3px 0 currentColor;
+  }
+
+  /* INSIDE STROKE - Traditional webkit text stroke (centered) */
+  .text-stroke-inside-white {
+    -webkit-text-stroke: 2px white;
+    text-stroke: 2px white;
+  }
+
+  .text-stroke-inside-black {
+    -webkit-text-stroke: 2px black;
+    text-stroke: 2px black;
+  }
+
+  .text-stroke-inside-red {
+    -webkit-text-stroke: 4px red;
+    text-stroke: 4px red;
+  }
+
+  .text-stroke-inside-blue {
+    -webkit-text-stroke: 2px blue;
+    text-stroke: 2px blue;
+  }
+
+  .text-stroke-inside-yellow {
+    -webkit-text-stroke: 2px yellow;
+    text-stroke: 2px yellow;
+  }
+
+  /* Inside stroke widths */
+  .text-stroke-inside-thin {
+    -webkit-text-stroke: 1px currentColor;
+    text-stroke: 1px currentColor;
+  }
+
+  .text-stroke-inside-medium {
+    -webkit-text-stroke: 2px currentColor;
+    text-stroke: 2px currentColor;
+  }
+
+  .text-stroke-inside-thick {
+    -webkit-text-stroke: 3px currentColor;
+    text-stroke: 3px currentColor;
+  }
+
+  /* LAYERED TECHNIQUE - Best quality outside stroke */
+  .text-stroke-layered {
+    position: relative;
+  }
+
+  .text-stroke-layered::before {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    -webkit-text-stroke: 4px currentColor;
+    text-stroke: 4px currentColor;
+    color: transparent;
+  }
+
+  /* Outline text - hollow letters with stroke only */
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: 2px currentColor;
+    text-stroke: 2px currentColor;
   }
 }
