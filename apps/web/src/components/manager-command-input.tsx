@@ -5,7 +5,7 @@ import type { Arrow } from '@/types'
 import { useEffect, useState } from 'react'
 import * as THREE from 'three'
 
-export default function CommandInputManager() {
+export default function ManagerCommandInput() {
   const [combos, setCombos] = useState<Arrow[]>([])
   // const skills = useMagic((state) => state.skills)
   const addSkill = useMagic((state) => state.addSkill)

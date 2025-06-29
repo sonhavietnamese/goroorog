@@ -1,9 +1,9 @@
-import CommandInputManager from './command-input-manager'
 import sampleHealthbar from '@/assets/sample-healthbar.png'
 import sampleLeaderboard from '@/assets/sample-leaderboard.png'
 import samplePanel from '@/assets/sample-panel.png'
 import connectButton from '@/assets/elements/connect-button.png'
 import howtoplay from '@/assets/elements/how-to-play.png'
+import ManagerCommandInput from './manager-command-input'
 
 export default function Hud() {
   return (
@@ -31,7 +31,7 @@ export default function Hud() {
       </div>
 
       <div className='absolute bottom-10 left-10'></div>
-      <CommandInputManager />
+      <ManagerCommandInput />
     </section>
   )
 }

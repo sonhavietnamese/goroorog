@@ -1,24 +1,17 @@
 import prototype from '@/assets/textures/prototype.png'
+import Bana from '@/components/bana'
 import Boss from '@/components/boss'
 import type { BVHEcctrlApi } from '@/components/control'
 import BVHEcctrl, { StaticCollider } from '@/components/control'
+import IndicatorPlayer from '@/components/indicator-player'
+import { ManagerSkill } from '@/components/manager-skill'
+import { KEYBOARD_MAP } from '@/configs/keyboard'
 import { useControlStore, type ControlState } from '@/stores/control'
 import { CameraControls, KeyboardControls, useTexture } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { Bloom, EffectComposer } from '@react-three/postprocessing'
 import { useRef } from 'react'
 import * as THREE from 'three'
-import { Magic } from './components/magic'
-import Bana from './components/Bana'
-
-const KEYBOARD_MAP = [
-  { name: 'forward', keys: ['KeyW'] },
-  { name: 'backward', keys: ['KeyS'] },
-  { name: 'leftward', keys: ['KeyA'] },
-  { name: 'rightward', keys: ['KeyD'] },
-  { name: 'jump', keys: ['Space'] },
-  { name: 'run', keys: ['Shift'] },
-]
 
 export default function Game() {
   const controlRef = useRef<BVHEcctrlApi | null>(null)
@@ -48,11 +41,12 @@ export default function Game() {
       <CameraControls ref={camControlRef} smoothTime={0.1} colliderMeshes={colliderMeshesArray} makeDefault />
 
       <KeyboardControls map={KEYBOARD_MAP}>
-        <BVHEcctrl debug ref={controlRef} maxWalkSpeed={10} maxRunSpeed={20} jumpVel={20} counterVelFactor={0} deceleration={100} acceleration={100}>
-          {/* <Box /> */}
+        <BVHEcctrl ref={controlRef} maxWalkSpeed={10} maxRunSpeed={20} jumpVel={20} counterVelFactor={0} deceleration={100} acceleration={100}>
           <Bana />
         </BVHEcctrl>
       </KeyboardControls>
+
+      <IndicatorPlayer />
 
       <StaticCollider>
         <Ground />
@@ -62,7 +56,7 @@ export default function Game() {
         <Bloom intensity={1.1} luminanceThreshold={1} mipmapBlur />
       </EffectComposer>
 
-      <Magic />
+      <ManagerSkill />
     </>
   )
 }

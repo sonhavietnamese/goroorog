@@ -1,9 +1,9 @@
 import { useControlStore } from '@/stores/control'
-import { Outlines, useAnimations, useGLTF } from '@react-three/drei'
+import { useAnimations, useGLTF } from '@react-three/drei'
 import { useGraph } from '@react-three/fiber'
 import React, { useEffect, useRef, type JSX } from 'react'
 import * as THREE from 'three'
-import { type GLTF, SkeletonUtils } from 'three-stdlib'
+import { SkeletonUtils, type GLTF } from 'three-stdlib'
 import type { CharacterAnimationStatus } from './control'
 
 type ActionName = 'dance' | 'die' | 'idle' | 'run' | 'walk'
@@ -51,15 +51,16 @@ export default function Bana(props: JSX.IntrinsicElements['group']) {
   }, [characterStatus.animationStatus, actions])
 
   return (
-    <group ref={group} {...props} dispose={null}>
-      <group name='metarig' position={[0.101, 0.06, 0.083]} rotation={[0, 0, 0]} scale={0.559}>
-        <primitive object={nodes.spine} />
-        <skinnedMesh name='tmpzvx9c3bcply' geometry={nodes.tmpzvx9c3bcply.geometry} skeleton={nodes.tmpzvx9c3bcply.skeleton}>
-          <meshStandardMaterial map={materials.Material_0.map} />
-          <Outlines thickness={2} color='white' />
-        </skinnedMesh>
+    <>
+      <group ref={group} position={[0, -0.7, 0]} {...props} dispose={null}>
+        <group name='metarig' scale={1}>
+          <primitive object={nodes.spine} />
+          <skinnedMesh name='tmpzvx9c3bcply' geometry={nodes.tmpzvx9c3bcply.geometry} skeleton={nodes.tmpzvx9c3bcply.skeleton}>
+            <meshStandardMaterial map={materials.Material_0.map} />
+          </skinnedMesh>
+        </group>
       </group>
-    </group>
+    </>
   )
 }
 

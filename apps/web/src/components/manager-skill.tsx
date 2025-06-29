@@ -2,14 +2,14 @@ import { useMagic } from '@/hooks/use-magic'
 import { useFrame } from '@react-three/fiber'
 import { useRef } from 'react'
 import * as THREE from 'three'
-import { degToRad, lerp } from 'three/src/math/MathUtils.js'
+import { lerp } from 'three/src/math/MathUtils.js'
 import Skills from './skills'
 import VFXS from './vfxs'
 
-export const Magic = ({ ...props }) => {
+export const ManagerSkill = ({ ...props }) => {
   const update = useMagic((state) => state.update)
-  const skill = useMagic((state) => state.skill)
-  const addSkill = useMagic((state) => state.addSkill)
+  // const skill = useMagic((state) => state.skill)
+  // const addSkill = useMagic((state) => state.addSkill)
 
   const pointerPosition = useRef(new THREE.Vector3(0, 0.001, 0))
   const pointer = useRef<THREE.Mesh>(null)
@@ -31,7 +31,7 @@ export const Magic = ({ ...props }) => {
     <group {...props}>
       <VFXS />
       <Skills />
-      <mesh
+      {/* <mesh
         receiveShadow
         rotation-x={-Math.PI / 2}
         position-y={0.001}
@@ -49,7 +49,7 @@ export const Magic = ({ ...props }) => {
       <mesh ref={pointer} rotation-x={degToRad(-90)}>
         <circleGeometry args={[0.1, 32]} />
         <meshStandardMaterial emissive={skill.colors[0]} emissiveIntensity={2.5} />
-      </mesh>
+      </mesh> */}
     </group>
   )
 }
