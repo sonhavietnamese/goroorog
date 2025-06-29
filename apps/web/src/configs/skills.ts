@@ -1,26 +1,35 @@
-import { SkillType, type Skill } from '@/types'
+import { SkillType, type Arrow, type Skill } from '@/types'
 import * as THREE from 'three'
 
-export const ARROWS = {
+import aArrowUp from '@/assets/textures/arrow-up.png'
+import aArrowDown from '@/assets/textures/arrow-down.png'
+import aArrowLeft from '@/assets/textures/arrow-left.png'
+import aArrowRight from '@/assets/textures/arrow-right.png'
+
+export const ARROWS: Record<Arrow['symbol'], Arrow> = {
   up: {
     id: 'ArrowUp',
     name: 'Up',
-    symbol: '↑',
+    symbol: 'up',
+    texture: aArrowUp,
   },
   down: {
     id: 'ArrowDown',
     name: 'Down',
-    symbol: '↓',
+    symbol: 'down',
+    texture: aArrowDown,
   },
   left: {
     id: 'ArrowLeft',
     name: 'Left',
-    symbol: '←',
+    symbol: 'left',
+    texture: aArrowLeft,
   },
   right: {
     id: 'ArrowRight',
     name: 'Right',
-    symbol: '→',
+    symbol: 'right',
+    texture: aArrowRight,
   },
 }
 

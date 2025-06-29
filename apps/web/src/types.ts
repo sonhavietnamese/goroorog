@@ -8,7 +8,8 @@ export enum SkillType {
 export type Arrow = {
   id: string
   name: string
-  symbol: string
+  symbol: 'up' | 'down' | 'left' | 'right'
+  texture: string
 }
 
 export type Skill = {

@@ -8,8 +8,8 @@ export default function PanelPlayer() {
   if (!connected) return null
 
   return (
-    <div className='absolute w-[500px] bottom-5 left-1/2 -translate-x-1/2 pointer-events-auto select-none'>
-      <div className='w-full flex justify-between px-10 text-[40px] -top-6 leading-none absolute text-white'>
+    <div className='absolute w-[480px] bottom-5 left-1/2 -translate-x-1/2 pointer-events-auto select-none'>
+      <div className='w-full flex justify-between px-10 text-[32px] -top-4 leading-none absolute text-white'>
         <div className='flex items-center gap-2'>
           <span className='text-player-panel'>#123</span>
           <span className='text-player-panel'>You</span>

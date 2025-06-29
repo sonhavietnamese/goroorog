@@ -61,10 +61,10 @@ export default function ManagerCommandInput() {
   }, [combos])
 
   return (
-    <aside className='absolute bottom-10 left-1/2 -translate-x-1/2 text-white text-2xl flex gap-2'>
+    <aside className='absolute bottom-32 left-1/2 -translate-x-1/2 text-white text-2xl flex gap-2'>
       {combos.map((combo) => (
-        <div key={`${combo.id}-${Math.random()}`} className='flex aspect-square items-center justify-center gap-2 p-2 bg-black/50 rounded-md'>
-          {combo.symbol}
+        <div key={`${combo.id}-${Math.random()}`} className='flex aspect-square items-center justify-center gap-2 p-2 rounded-md'>
+          <img src={combo.texture} alt={combo.symbol} className='w-full h-full aspect-square' />
         </div>
       ))}
     </aside>

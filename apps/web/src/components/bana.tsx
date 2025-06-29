@@ -51,16 +51,12 @@ export default function Bana(props: JSX.IntrinsicElements['group']) {
   }, [characterStatus.animationStatus, actions])
 
   return (
-    <>
-      <group ref={group} position={[0, -0.7, 0]} {...props} dispose={null}>
-        <group name='metarig' scale={1}>
-          <primitive object={nodes.spine} />
-          <skinnedMesh name='tmpzvx9c3bcply' geometry={nodes.tmpzvx9c3bcply.geometry} skeleton={nodes.tmpzvx9c3bcply.skeleton}>
-            <meshStandardMaterial map={materials.Material_0.map} />
-          </skinnedMesh>
-        </group>
-      </group>
-    </>
+    <group ref={group} position={[0, -0.7, 0]} scale={1} {...props} dispose={null}>
+      <primitive object={nodes.spine} />
+      <skinnedMesh name='tmpzvx9c3bcply' geometry={nodes.tmpzvx9c3bcply.geometry} skeleton={nodes.tmpzvx9c3bcply.skeleton}>
+        <meshStandardMaterial map={materials.Material_0.map} />
+      </skinnedMesh>
+    </group>
   )
 }
 
