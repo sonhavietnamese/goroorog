@@ -1,0 +1,25 @@
+[package]
+name = "goroorog"
+version = "0.1.0"
+description = "Created with Anchor"
+edition = "2021"
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(feature, values("custom-heap", "custom-panic", "anchor-debug"))', 'cfg(target_os, values("solana"))'] }
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "goroorog"
+
+[features]
+default = []
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+idl-build = ["anchor-lang/idl-build"]
+
+
+[dependencies]
+anchor-lang = { version = "0.31.0", features = ["init-if-needed"] }
+

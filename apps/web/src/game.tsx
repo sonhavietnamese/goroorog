@@ -1,6 +1,5 @@
 import Boss from '@/components/boss'
 import Ground from '@/components/ground'
-import IndicatorPlayer from '@/components/indicator-player'
 import { ManagerSkill } from '@/components/manager-skill'
 import PlayerLocal from '@/components/player-local'
 import PlayerRemote from '@/components/player-remote'
@@ -18,8 +17,6 @@ export default function Game() {
 
       <PlayerLocal />
       <PlayerRemote />
-
-      <IndicatorPlayer />
 
       <Ground />
 

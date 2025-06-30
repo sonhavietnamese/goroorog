@@ -1,4 +1,5 @@
 import type { Vector3 } from 'three'
+import type { CharacterAnimationStatus } from './components/control'
 
 export enum SkillType {
   Attack = 'attack',
@@ -153,3 +154,10 @@ export const easeFunctionList: EaseFunction[] = [
   'easeOutBounce',
   'easeInOutBounce',
 ]
+
+export type Player = {
+  address: string
+  position: [number, number, number]
+  quaternion: [number, number, number, number]
+  animation: CharacterAnimationStatus
+}

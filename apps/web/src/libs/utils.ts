@@ -7,6 +7,14 @@ export function randomInRange(min: number, max: number) {
 }
 
 export function formatWalletAddress(address: string, length = 6) {
+  if (!address) {
+    return 'Anonytrash'
+  }
+
+  if (address.length < length * 2 + 3) {
+    return address
+  }
+
   return address.slice(0, length) + '...' + address.slice(-length)
 }
 

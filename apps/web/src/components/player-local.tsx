@@ -1,17 +1,19 @@
+import aPlayerIndicatorTexture from '@/assets/textures/player-indicator.png'
+import { ANIMATION_MAP } from '@/configs/animation'
 import { KEYBOARD_MAP } from '@/configs/keyboard'
 import { database } from '@/libs/firebase'
 import { getRandomSpawnPoint } from '@/libs/utils'
 import { useAuthStore } from '@/stores/auth'
 import { useControlStore } from '@/stores/control'
-import { CameraControls, KeyboardControls } from '@react-three/drei'
+import type { Player } from '@/types'
+import { CameraControls, KeyboardControls, useTexture } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { ref, set } from 'firebase/database'
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
-import Control, { type CharacterAnimationStatus, type ControlApi } from './control'
+import Control, { type ControlApi } from './control'
 import Bana from './player-bana'
-import { ANIMATION_MAP } from '@/configs/animation'
 
 const THRESHOLD_DISTANCE = 0.2
 
@@ -20,6 +22,7 @@ export default function PlayerLocal() {
   const camControlRef = useRef<CameraControls | null>(null)
   const lightRef = useRef<THREE.DirectionalLight | null>(null)
   const spawnPoint = useRef<THREE.Vector3>(getRandomSpawnPoint())
+  const playerIndicatorRef = useRef<THREE.Mesh | null>(null)
 
   const colliderMeshesArray = useControlStore((state) => state.colliderMeshesArray)
   const characterStatus = useControlStore((state) => state.characterStatus)
@@ -27,14 +30,11 @@ export default function PlayerLocal() {
 
   const { publicKey } = useWallet()
 
+  const playerIndicatorTexture = useTexture(aPlayerIndicatorTexture)
+
   const tick = useRef(0)
   const lastPosition = useRef<THREE.Vector3>(new THREE.Vector3(0, 0, 0))
-  const payload = useRef<{
-    position: [number, number, number]
-    quaternion: [number, number, number, number]
-    address: string
-    animation: CharacterAnimationStatus
-  }>({
+  const payload = useRef<Player>({
     address: publicKey?.toBase58() ?? '',
     position: [spawnPoint.current.x, spawnPoint.current.y, spawnPoint.current.z],
     quaternion: [0, 0, 0, 1],
@@ -68,11 +68,15 @@ export default function PlayerLocal() {
 
         set(ref(database, `users/${user.uid}`), {
           ...payload.current,
-          position: [characterStatus.position.x, characterStatus.position.y, characterStatus.position.z],
+          position: [characterStatus.position.x, characterStatus.position.y - 0.7, characterStatus.position.z],
           animation: characterStatus.animationStatus,
           quaternion: [characterStatus.quaternion.x, characterStatus.quaternion.y, characterStatus.quaternion.z, characterStatus.quaternion.w],
         })
       }
+    }
+
+    if (playerIndicatorRef.current) {
+      playerIndicatorRef.current.rotation.z += 0.01
     }
   })
 
@@ -91,6 +95,10 @@ export default function PlayerLocal() {
           acceleration={100}
           position={spawnPoint.current}>
           <Bana animation={ANIMATION_MAP[characterStatus.animationStatus]} />
+          <mesh ref={playerIndicatorRef} position={[0, -0.7, 0]} rotation={[-Math.PI / 2, 0, 0]} dispose={null}>
+            <planeGeometry args={[4, 4]} />
+            <meshStandardMaterial map={playerIndicatorTexture} transparent />
+          </mesh>
         </Control>
       </KeyboardControls>
     </>
