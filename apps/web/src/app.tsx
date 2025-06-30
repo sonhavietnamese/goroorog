@@ -3,23 +3,26 @@ import ProviderWallet from '@/components/provider-wallet'
 import Game from '@/game'
 import { PositionalAudio } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
+import ProviderAuth from './components/provider-auth'
 
 export default function App() {
   return (
     <main className='w-dvw h-dvh bg-black'>
       <ProviderWallet>
-        <Hud />
-        <Canvas
-          shadows
-          camera={{
-            fov: 25,
-            near: 0.1,
-            far: 500,
-            position: [-30, 20, 30],
-          }}>
-          <Game />
-          <Preloader />
-        </Canvas>
+        <ProviderAuth>
+          <Hud />
+          <Canvas
+            shadows
+            camera={{
+              fov: 25,
+              near: 0.1,
+              far: 500,
+              position: [-30, 20, 30],
+            }}>
+            <Game />
+            <Preloader />
+          </Canvas>
+        </ProviderAuth>
       </ProviderWallet>
     </main>
   )
