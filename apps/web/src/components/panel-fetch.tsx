@@ -1,31 +1,13 @@
+import { PLAYER_SKILLS, PLAYER_STATS, RESOURCES } from '@/configs/base-stats'
 import { SEEDS } from '@/configs/seeds'
 import { useProgram } from '@/hooks/use-program'
 import { GORBAGANA_CONNECTION } from '@/libs/gorbagana'
 import { parseSecretKey } from '@/libs/utils'
 import { useDelegate } from '@/stores/delegate'
 import { useOnboarding } from '@/stores/onboarding'
-import { BN } from '@coral-xyz/anchor'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { PublicKey, Transaction, VersionedTransaction } from '@solana/web3.js'
 import { useEffect } from 'react'
-
-const PLAYER_STATS = [
-  { id: 1, base: new BN(2_000_000_000), level: new BN(1) }, // Health
-  { id: 2, base: new BN(100_000_000), level: new BN(1) }, // Attack
-  { id: 3, base: new BN(100_000_000), level: new BN(1) }, // Defense
-  { id: 4, base: new BN(100_000_000), level: new BN(1) }, // Speed
-]
-
-const PLAYER_SKILLS = [
-  { id: 1, base: new BN(100_000_000), level: new BN(1) },
-  { id: 2, base: new BN(100_000_000), level: new BN(1) },
-  { id: 3, base: new BN(100_000_000), level: new BN(1) },
-]
-
-const RESOURCES = [
-  { id: 1, amount: new BN(1) },
-  { id: 2, amount: new BN(1) },
-]
 
 export default function PanelFetch() {
   const { program, fetchPlayerData } = useProgram()
@@ -96,10 +78,6 @@ export default function PanelFetch() {
       console.log(`✓ Added create resource instruction for resource ID ${resource.id}`)
     }
 
-    console.log('\n📦 Transaction Summary:')
-    console.log(`- 1 create player instruction`)
-    console.log(`- 4 create stats instructions`)
-    console.log(`- 3 create skills instructions`)
     console.log(`- Total instructions: ${transaction.instructions.length}`)
 
     // Get recent blockhash and its last valid height
@@ -108,7 +86,6 @@ export default function PanelFetch() {
     transaction.feePayer = payer.publicKey
 
     // Sign and send transaction
-    console.log('\n🚀 Sending transaction...')
     const message = transaction.compileMessage()
     const versionedTransaction = new VersionedTransaction(message)
     versionedTransaction.sign([payer])
