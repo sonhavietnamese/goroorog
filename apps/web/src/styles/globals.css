@@ -21,6 +21,10 @@
   button:active {
     rotate: -10deg;
   }
+
+  button:hover {
+    @apply cursor-pointer;
+  }
 }
 
 @layer utilities {

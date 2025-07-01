@@ -4,16 +4,17 @@ import { Goroorog } from '../target/types/goroorog'
 import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
 
 // Load IDL using require to avoid TypeScript module resolution issues
-const idl = require('./goroorog.json')
+const idl = require('../target/idl/goroorog.json')
 
 // Program ID
-const programId = new PublicKey('5MZ8ZN4VwEiC1XeoYaMmDcud9p5tsGtx2B1MDwmu2dz2')
+const programId = new PublicKey('7FyBUa4ZCA2krXYmSkJW6jdfZGVUpF6wTbYNUE5jRFyq')
 
 const privateKey = process.env.PRIVATE_KEY
 const keypair = Keypair.fromSecretKey(bs58.decode(privateKey))
 
 // RPC endpoint - you can change this to your preferred RPC
-const connection = new Connection('https://api.devnet.solana.com', 'confirmed')
+// const connection = new Connection('https://api.devnet.solana.com', 'confirmed')
+const connection = new Connection('https://rpc.gorbagana.wtf', 'confirmed')
 
 // PLAYER Stats configuration based on comments:
 // - Health ID: 1, Health: 2_000_000_000, Level: 1
@@ -59,15 +60,17 @@ const createBossWithStatsAndSkills = async () => {
 
     const owner = new Keypair().publicKey
 
-    // Derive PDA for boss
-    const playerPDA = PublicKey.findProgramAddressSync([Buffer.from('players'), owner.toBuffer()], programId)
+    console.log('Owner:', owner.toString())
+
+    // Derive PDA for player
+    const [playerPDA] = PublicKey.findProgramAddressSync([Buffer.from('players'), owner.toBuffer()], programId)
 
     console.log('Player PDA:', playerPDA.toString())
 
     // Create main transaction
     const transaction = new Transaction()
 
-    // 1. Create Boss instruction
+    // 1. Create Player instruction
     const createPlayerIx = await program.methods
       .createPlayer()
       .accounts({
@@ -132,10 +135,11 @@ const createBossWithStatsAndSkills = async () => {
         .instruction()
 
       transaction.add(createResourceIx)
+      console.log(`✓ Added create resource instruction for resource ID ${resource.id}`)
     }
 
     console.log('\n📦 Transaction Summary:')
-    console.log(`- 1 create boss instruction`)
+    console.log(`- 1 create player instruction`)
     console.log(`- 4 create stats instructions`)
     console.log(`- 3 create skills instructions`)
     console.log(`- Total instructions: ${transaction.instructions.length}`)

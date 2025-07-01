@@ -32,10 +32,10 @@ export default function Boss() {
     <group>
       <Gor scale={10} position={[0, -0.5, 0]} />
 
-      <mesh ref={ring} position={[-3, -0.4, 12]} rotation={[-Math.PI / 2, 0, 0]}>
+      {/* <mesh ref={ring} position={[-3, -0.4, 12]} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[BASE_INNER_RADIUS, BASE_OUTER_RADIUS, SEGMENTS]} />
         <meshStandardMaterial color='red' />
-      </mesh>
+      </mesh> */}
     </group>
   )
 }

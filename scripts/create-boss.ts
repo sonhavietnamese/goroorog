@@ -45,7 +45,6 @@ const createBossWithStatsAndSkills = async () => {
     // For demo purposes, creating a new keypair
     const payer = keypair
     console.log('Payer public key:', payer.publicKey.toString())
-    console.log('⚠️  Make sure this keypair has SOL for transaction fees!')
 
     // Create wallet and provider
     const wallet = new Wallet(payer)
@@ -55,19 +54,19 @@ const createBossWithStatsAndSkills = async () => {
     const program = new Program(idl as Goroorog, provider)
 
     // Derive PDA for boss
-    const boss = new Keypair()
+    const bossPDA = PublicKey.findProgramAddressSync([Buffer.from('boss'), Buffer.from([1])], programId)
 
-    console.log('Boss PDA:', boss.publicKey.toString())
+    console.log('Boss PDA:', bossPDA[0].toString())
 
     // Create main transaction
     const transaction = new Transaction()
 
     // 1. Create Boss instruction
     const createBossIx = await program.methods
-      .createBoss()
+      .createBoss(1)
       .accounts({
         payer: payer.publicKey,
-        boss: boss.publicKey,
+        boss: bossPDA[0],
         systemProgram: SystemProgram.programId,
       })
       .instruction()
@@ -77,13 +76,13 @@ const createBossWithStatsAndSkills = async () => {
 
     // 2. Create 4 Stats instructions
     for (const stat of BOSS_STATS) {
-      const [statPda] = PublicKey.findProgramAddressSync([Buffer.from('stats'), Buffer.from([stat.id]), boss.publicKey.toBuffer()], programId)
+      const [statPda] = PublicKey.findProgramAddressSync([Buffer.from('stats'), Buffer.from([stat.id]), bossPDA[0].toBuffer()], programId)
 
       const createStatIx = await program.methods
         .createStat(stat.id, [stat.base, stat.level])
         .accounts({
           payer: payer.publicKey,
-          owner: boss.publicKey,
+          owner: bossPDA[0],
           stat: statPda,
           systemProgram: SystemProgram.programId,
         })
@@ -95,13 +94,13 @@ const createBossWithStatsAndSkills = async () => {
 
     // 3. Create 3 Skills instructions
     for (const skill of BOSS_SKILLS) {
-      const [skillPda] = PublicKey.findProgramAddressSync([Buffer.from('skills'), Buffer.from([skill.id]), boss.publicKey.toBuffer()], programId)
+      const [skillPda] = PublicKey.findProgramAddressSync([Buffer.from('skills'), Buffer.from([skill.id]), bossPDA[0].toBuffer()], programId)
 
       const createSkillIx = await program.methods
         .createSkill(skill.id, [skill.base, skill.level])
         .accounts({
           payer: payer.publicKey,
-          owner: boss.publicKey,
+          owner: bossPDA[0],
           skill: skillPda,
           systemProgram: SystemProgram.programId,
         })
@@ -126,7 +125,7 @@ const createBossWithStatsAndSkills = async () => {
     console.log('\n🚀 Sending transaction...')
     const message = transaction.compileMessage()
     const versionedTransaction = new VersionedTransaction(message)
-    versionedTransaction.sign([payer, boss])
+    versionedTransaction.sign([payer])
     const signature = await connection.sendTransaction(versionedTransaction)
     console.log('Transaction signature:', signature)
 
@@ -139,7 +138,7 @@ const createBossWithStatsAndSkills = async () => {
     } else {
       console.log('✅ Transaction confirmed!')
       console.log('Boss created with stats and skills successfully!')
-      console.log('Boss address:', boss.publicKey.toString())
+      console.log('Boss address:', bossPDA[0].toString())
     }
   } catch (error) {
     console.error('Error creating boss:', error)

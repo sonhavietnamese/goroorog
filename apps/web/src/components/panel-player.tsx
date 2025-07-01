@@ -1,11 +1,13 @@
 import aPanelPlayer from '@/assets/elements/panel-player.png'
 import { formatWalletAddress } from '@/libs/utils'
+import { useOnboarding } from '@/stores/onboarding'
 import { useWallet } from '@solana/wallet-adapter-react'
 
 export default function PanelPlayer() {
   const { publicKey, connected, disconnect } = useWallet()
+  const { step } = useOnboarding()
 
-  if (!connected) return null
+  if (!connected || step !== 'start') return null
 
   return (
     <div className='absolute w-[480px] bottom-5 left-1/2 -translate-x-1/2 pointer-events-auto select-none'>

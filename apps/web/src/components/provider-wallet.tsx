@@ -1,8 +1,6 @@
 import { BackpackWalletAdapter } from '@solana/wallet-adapter-backpack'
-import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react'
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui'
-import { clusterApiUrl } from '@solana/web3.js'
 import { useMemo, type JSX } from 'react'
 
 interface ProviderWalletProps {
@@ -10,18 +8,12 @@ interface ProviderWalletProps {
 }
 
 export default function ProviderWallet({ children }: ProviderWalletProps) {
-  const network = WalletAdapterNetwork.Devnet
+  const network = 'https://rpc.gorbagana.wtf'
 
-  const endpoint = useMemo(() => clusterApiUrl(network), [network])
-
-  const wallets = useMemo(
-    () => [new BackpackWalletAdapter()],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [network],
-  )
+  const wallets = useMemo(() => [new BackpackWalletAdapter()], [])
 
   return (
-    <ConnectionProvider endpoint={endpoint}>
+    <ConnectionProvider endpoint={network}>
       <WalletProvider wallets={wallets} autoConnect>
         <WalletModalProvider>{children}</WalletModalProvider>
       </WalletProvider>

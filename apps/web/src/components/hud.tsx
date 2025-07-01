@@ -1,10 +1,10 @@
 import sampleHealthbar from '@/assets/sample-healthbar.png'
-import ButtonConnect from './button-connect'
 import ManagerCommandInput from './manager-command-input'
 import PanelLeaderboard from './panel-leaderboard'
 import PanelPlayer from './panel-player'
 import PanelSkillInformation from './panel-skill-information'
 import PanelStats from './panel-stats'
+import Onboarding from './onboarding'
 
 export default function Hud() {
   return (
@@ -15,7 +15,9 @@ export default function Hud() {
 
       <PanelLeaderboard />
 
-      <ButtonConnect />
+      <Onboarding />
+
+      {/* <ButtonConnect /> */}
 
       <PanelPlayer />
 
