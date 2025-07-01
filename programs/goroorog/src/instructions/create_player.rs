@@ -3,13 +3,11 @@ use anchor_lang::prelude::*;
 use crate::constants::PLAYERS_SEED;
 use crate::states::Players;
 
-pub fn create_player(ctx: Context<CreatePlayer>, data: [u64; 500]) -> Result<()> {
+pub fn create_player(ctx: Context<CreatePlayer>) -> Result<()> {
     let player = &mut ctx.accounts.player;
+    let owner = &mut ctx.accounts.owner;
 
-    player.authority = ctx.accounts.payer.key();
-    player.max_health = data[0];
-    player.current_health = data[0];
-
+    player.authority = owner.key();
     player.bump = ctx.bumps.player;
 
     Ok(())
@@ -19,7 +17,13 @@ pub fn create_player(ctx: Context<CreatePlayer>, data: [u64; 500]) -> Result<()>
 pub struct CreatePlayer<'info> {
     #[account(mut)]
     pub payer: Signer<'info>,
-    #[account(init, payer = payer, seeds = [PLAYERS_SEED, payer.key().as_ref()], bump, space = 8 + Players::INIT_SPACE)]
+
+    /// CHECK: This is the owner of the player
+    #[account(mut)]
+    pub owner: AccountInfo<'info>,
+
+    #[account(init, payer = payer, seeds = [PLAYERS_SEED, owner.key().as_ref()], bump, space = 8 + Players::INIT_SPACE)]
     pub player: Account<'info, Players>,
+
     pub system_program: Program<'info, System>,
 }
