@@ -1,3 +1,4 @@
+import { Keypair } from '@solana/web3.js'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import * as THREE from 'three'
@@ -28,4 +29,9 @@ export function getRandomSpawnPoint() {
 
 export function distance(a: [number, number, number], b: [number, number, number]) {
   return Math.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2)
+}
+
+export function parseSecretKey(secretKey: string) {
+  const parsedSecretKey = secretKey.split(',').map((num) => Number(num))
+  return Keypair.fromSecretKey(Uint8Array.from(parsedSecretKey))
 }

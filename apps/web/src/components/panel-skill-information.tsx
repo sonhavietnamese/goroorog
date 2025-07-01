@@ -12,7 +12,7 @@ export default function PanelSkillInformation() {
               <div>
                 <div className='flex gap-2'>
                   {skill.combo.map((arrow) => (
-                    <img src={arrow.texture} alt={arrow.name} className='w-10 h-10' />
+                    <img key={arrow.id + Math.random()} src={arrow.texture} alt={arrow.name} className='w-10 h-10' />
                   ))}
                 </div>
               </div>

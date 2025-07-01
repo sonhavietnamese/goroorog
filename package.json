@@ -8,7 +8,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
     "program:build": "anchor build",
-    "program:deploy": "solana program deploy target/deploy/goroorog.so --use-rpc https://rpc.gorbagana.wtf"
+    "program:deploy": "solana config set --url https://rpc.gorbagana.wtf && solana program deploy target/deploy/goroorog.so --use-rpc"
   },
   "devDependencies": {
     "prettier": "^3.6.0",

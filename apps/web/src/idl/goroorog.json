@@ -166,6 +166,10 @@
               {
                 "kind": "account",
                 "path": "owner"
+              },
+              {
+                "kind": "account",
+                "path": "payer"
               }
             ]
           }
@@ -225,6 +229,10 @@
               {
                 "kind": "account",
                 "path": "owner"
+              },
+              {
+                "kind": "account",
+                "path": "payer"
               }
             ]
           }
@@ -295,6 +303,10 @@
               {
                 "kind": "account",
                 "path": "owner"
+              },
+              {
+                "kind": "account",
+                "path": "payer"
               }
             ]
           }
@@ -364,6 +376,10 @@
               {
                 "kind": "account",
                 "path": "owner"
+              },
+              {
+                "kind": "account",
+                "path": "payer"
               }
             ]
           }
@@ -606,13 +622,8 @@
   "errors": [
     {
       "code": 6000,
-      "name": "InvalidAttackAmount",
-      "msg": "Invalid attack amount"
-    },
-    {
-      "code": 6001,
-      "name": "BossAlreadyDead",
-      "msg": "Boss is already dead"
+      "name": "NotOwner",
+      "msg": "Not owner"
     }
   ],
   "types": [

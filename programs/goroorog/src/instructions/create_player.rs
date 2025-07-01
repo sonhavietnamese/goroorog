@@ -22,7 +22,7 @@ pub struct CreatePlayer<'info> {
     #[account(mut)]
     pub owner: AccountInfo<'info>,
 
-    #[account(init, payer = payer, seeds = [PLAYERS_SEED, owner.key().as_ref()], bump, space = 8 + Players::INIT_SPACE)]
+    #[account(init, payer = payer, seeds = [PLAYERS_SEED, owner.key().as_ref(), payer.key().as_ref()], bump, space = 8 + Players::INIT_SPACE)]
     pub player: Account<'info, Players>,
 
     pub system_program: Program<'info, System>,

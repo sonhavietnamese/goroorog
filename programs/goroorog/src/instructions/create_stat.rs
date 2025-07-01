@@ -25,7 +25,7 @@ pub struct CreateStat<'info> {
     #[account(mut)]
     pub owner: AccountInfo<'info>,
 
-    #[account(init, seeds = [STATS_SEED, id.to_le_bytes().as_ref(), owner.key().as_ref()], bump, payer = payer, space = 8 + Stats::INIT_SPACE)]
+    #[account(init, seeds = [STATS_SEED, id.to_le_bytes().as_ref(), owner.key().as_ref(), payer.key().as_ref()], bump, payer = payer, space = 8 + Stats::INIT_SPACE)]
     pub stat: Account<'info, Stats>,
 
     pub system_program: Program<'info, System>,

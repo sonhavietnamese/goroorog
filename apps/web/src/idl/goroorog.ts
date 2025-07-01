@@ -125,6 +125,10 @@ export type Goroorog = {
                 kind: 'account'
                 path: 'owner'
               },
+              {
+                kind: 'account'
+                path: 'payer'
+              },
             ]
           }
         },
@@ -164,6 +168,10 @@ export type Goroorog = {
               {
                 kind: 'account'
                 path: 'owner'
+              },
+              {
+                kind: 'account'
+                path: 'payer'
               },
             ]
           }
@@ -216,6 +224,10 @@ export type Goroorog = {
                 kind: 'account'
                 path: 'owner'
               },
+              {
+                kind: 'account'
+                path: 'payer'
+              },
             ]
           }
         },
@@ -266,6 +278,10 @@ export type Goroorog = {
               {
                 kind: 'account'
                 path: 'owner'
+              },
+              {
+                kind: 'account'
+                path: 'payer'
               },
             ]
           }
@@ -415,13 +431,8 @@ export type Goroorog = {
   errors: [
     {
       code: 6000
-      name: 'invalidAttackAmount'
-      msg: 'Invalid attack amount'
-    },
-    {
-      code: 6001
-      name: 'bossAlreadyDead'
-      msg: 'Boss is already dead'
+      name: 'notOwner'
+      msg: 'Not owner'
     },
   ]
   types: [

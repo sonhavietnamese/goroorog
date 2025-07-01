@@ -24,7 +24,7 @@ pub struct CreateResource<'info> {
     #[account(mut)]
     pub owner: AccountInfo<'info>,
 
-    #[account(init, seeds = [RESOURCES_SEED, id.to_le_bytes().as_ref(), owner.key().as_ref()], bump, payer = payer, space = 8 + Resources::INIT_SPACE)]
+    #[account(init, seeds = [RESOURCES_SEED, id.to_le_bytes().as_ref(), owner.key().as_ref(), payer.key().as_ref()], bump, payer = payer, space = 8 + Resources::INIT_SPACE)]
     pub resource: Account<'info, Resources>,
 
     pub system_program: Program<'info, System>,

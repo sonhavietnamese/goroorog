@@ -56,16 +56,16 @@ export default function PanelDelegate() {
     const checkBalance = async () => {
       if (!keypair?.publicKey) return
 
-      const balance = await connection.getBalance(new PublicKey(keypair.publicKey))
+      const balance = await connection.getBalance(new PublicKey(keypair.publicKey), 'finalized')
 
       if (balance >= DELEGATE_ACCOUNT_MIN_THRESHOLD) {
         setIsLoading(false)
-        setStep('start')
+        setStep('fetch')
       }
     }
     checkBalance()
 
-    const interval = setInterval(checkBalance, 2000)
+    const interval = setInterval(checkBalance, 3000)
 
     return () => clearInterval(interval)
   }, [keypair?.publicKey, connection, setStep])

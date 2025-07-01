@@ -1,7 +1,12 @@
 import aBitedApple from '@/assets/icons/bited-apple.png'
 import aTrashBag from '@/assets/icons/trash-bag.png'
+import { usePlayer } from '@/stores/player'
 
 export default function PanelStats() {
+  const { resources } = usePlayer()
+
+  if (Object.keys(resources).length === 0) return null
+
   return (
     <div className='absolute bottom-10 right-7 flex flex-col gap-2'>
       <div className='flex gap-2 flex-col'>
@@ -9,11 +14,11 @@ export default function PanelStats() {
         <div className='flex items-center gap-5'>
           <div className='flex items-center gap-2'>
             <img src={aBitedApple} alt='bited-apple' className='w-10 h-10' />
-            <span className='text-white text-2xl'>100</span>
+            <span className='text-white text-2xl'>{resources[1].amount.toString()}</span>
           </div>
           <div className='flex items-center gap-2'>
             <img src={aTrashBag} alt='trash-bag' className='w-10 h-10' />
-            <span className='text-white text-2xl'>100</span>
+            <span className='text-white text-2xl'>{resources[2].amount.toString()}</span>
           </div>
         </div>
       </div>

@@ -25,7 +25,7 @@ pub struct CreateSkill<'info> {
     #[account(mut)]
     pub owner: AccountInfo<'info>,
 
-    #[account(init, seeds = [SKILLS_SEED, id.to_le_bytes().as_ref(), owner.key().as_ref()], bump, payer = payer, space = 8 + Skills::INIT_SPACE)]
+    #[account(init, seeds = [SKILLS_SEED, id.to_le_bytes().as_ref(), owner.key().as_ref(), payer.key().as_ref()], bump, payer = payer, space = 8 + Skills::INIT_SPACE)]
     pub skill: Account<'info, Skills>,
 
     pub system_program: Program<'info, System>,
