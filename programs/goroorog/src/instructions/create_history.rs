@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 
-use crate::constants::*;
-use crate::states::*;
+use crate::constants::HISTORY_SEED;
+use crate::states::History;
 
 pub fn create_history(ctx: Context<CreateHistory>, value: u64) -> Result<()> {
     let history = &mut ctx.accounts.history;

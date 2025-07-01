@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 
-use crate::constants::*;
-use crate::states::*;
+use crate::constants::STATS_SEED;
+use crate::states::Stats;
 
 pub fn create_stat(ctx: Context<CreateStat>, id: u8, data: [u64; 2]) -> Result<()> {
     let stat = &mut ctx.accounts.stat;

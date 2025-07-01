@@ -37,6 +37,11 @@ const PLAYER_SKILLS = [
   { id: 3, base: new BN(100_000_000), level: new BN(1) },
 ]
 
+const RESOURCES = [
+  { id: 1, amount: new BN(1) },
+  { id: 2, amount: new BN(1) },
+]
+
 const createBossWithStatsAndSkills = async () => {
   try {
     // Load wallet - in a real script, you'd load from file or environment
@@ -110,6 +115,23 @@ const createBossWithStatsAndSkills = async () => {
 
       transaction.add(createSkillIx)
       console.log(`✓ Added create skill instruction for skill ID ${skill.id}`)
+    }
+
+    // 4. Create 2 Resources instructions
+    for (const resource of RESOURCES) {
+      const [resourcePda] = PublicKey.findProgramAddressSync([Buffer.from('resources'), Buffer.from([resource.id]), owner.toBuffer()], programId)
+
+      const createResourceIx = await program.methods
+        .createResource(resource.id, [resource.amount])
+        .accounts({
+          payer: payer.publicKey,
+          owner: owner,
+          resource: resourcePda,
+          systemProgram: SystemProgram.programId,
+        })
+        .instruction()
+
+      transaction.add(createResourceIx)
     }
 
     console.log('\n📦 Transaction Summary:')

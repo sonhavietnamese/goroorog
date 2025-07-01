@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 
-use crate::constants::*;
-use crate::states::*;
+use crate::constants::SKILLS_SEED;
+use crate::states::Skills;
 
 pub fn create_skill(ctx: Context<CreateSkill>, id: u8, data: [u64; 2]) -> Result<()> {
     let skill = &mut ctx.accounts.skill;

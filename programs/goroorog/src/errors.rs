@@ -15,3 +15,15 @@ pub enum PlayerError {
     #[msg("Insufficient resources")]
     InsufficientResources,
 }
+
+#[error_code]
+pub enum ResourceError {
+    #[msg("Not owner")]
+    NotOwner,
+}
+
+#[error_code]
+pub enum HistoryError {
+    #[msg("Not owner")]
+    NotOwner,
+}

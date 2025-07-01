@@ -4,16 +4,18 @@ import { Goroorog } from '../target/types/goroorog'
 import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
 
 // Load IDL using require to avoid TypeScript module resolution issues
-const idl = require('./goroorog.json')
+const idl = require('../target/idl/goroorog.json')
 
 // Program ID
-const programId = new PublicKey('5MZ8ZN4VwEiC1XeoYaMmDcud9p5tsGtx2B1MDwmu2dz2')
+// const programId = new PublicKey('5MZ8ZN4VwEiC1XeoYaMmDcud9p5tsGtx2B1MDwmu2dz2')
+const programId = new PublicKey('7FyBUa4ZCA2krXYmSkJW6jdfZGVUpF6wTbYNUE5jRFyq')
 
 const privateKey = process.env.PRIVATE_KEY
 const keypair = Keypair.fromSecretKey(bs58.decode(privateKey))
 
 // RPC endpoint - you can change this to your preferred RPC
-const connection = new Connection('https://api.devnet.solana.com', 'confirmed')
+// const connection = new Connection('https://api.devnet.solana.com', 'confirmed')
+const connection = new Connection('https://rpc.gorbagana.wtf', 'confirmed')
 
 // BOSS Stats configuration based on comments:
 // - Health ID: 1, Health: 2_000_000_000, Level: 1
