@@ -6,6 +6,7 @@ use crate::states::History;
 pub fn create_history(ctx: Context<CreateHistory>, value: u64) -> Result<()> {
     let history = &mut ctx.accounts.history;
 
+    history.authority = ctx.accounts.from.key();
     history.from = ctx.accounts.from.key();
     history.to = ctx.accounts.to.key();
     history.value = value;

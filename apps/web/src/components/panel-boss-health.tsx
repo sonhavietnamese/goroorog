@@ -5,6 +5,8 @@ import { useBoss } from '@/stores/boss'
 export default function PanelBossHealth() {
   const { stats: bossStats } = useBoss()
 
+  if (Object.keys(bossStats).length === 0) return null
+
   return (
     <div className='absolute top-16 left-1/2 -translate-x-1/2 w-[400px] '>
       <img src={aAvatarBoss} draggable={false} className='w-[100px] absolute top-[-40px] z-[1] left-[-85px]' />

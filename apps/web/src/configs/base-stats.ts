@@ -16,7 +16,7 @@ export const PLAYER_STATS = [
   { id: 1, base: new BN(10_000), level: new BN(1) }, // Health
   { id: 2, base: new BN(100), level: new BN(1) }, // Damage
   { id: 3, base: new BN(10), level: new BN(1) }, // Speed
-  { id: 4, base: new BN(100_000), level: new BN(1) }, // Shield
+  { id: 4, base: new BN(100), level: new BN(1) }, // Shield
   { id: 5, base: new BN(10), level: new BN(1) }, // Jump
 ]
 

@@ -2,12 +2,37 @@ import aPanelPlayer from '@/assets/elements/panel-player.png'
 import { abbreviateNumber, formatWalletAddress } from '@/libs/utils'
 import { useOnboarding } from '@/stores/onboarding'
 import { usePlayer } from '@/stores/player'
+import { useProgram } from '@/hooks/use-program'
 import { useWallet } from '@solana/wallet-adapter-react'
+import { useEffect, useState } from 'react'
 
 export default function PanelPlayer() {
   const { publicKey, connected, disconnect } = useWallet()
   const { step, setStep } = useOnboarding()
   const { stats } = usePlayer()
+  const { getLeaderboard, getPlayerPDA } = useProgram()
+
+  const [rank, setRank] = useState<number | null>(null)
+
+  useEffect(() => {
+    const fetchRank = async () => {
+      if (!connected) return
+
+      const leaderboard = await getLeaderboard()
+      const sorted = leaderboard.sort((a, b) => b.value.toNumber() - a.value.toNumber())
+      const pda = getPlayerPDA()?.toBase58()
+
+      if (!pda) {
+        setRank(null)
+        return
+      }
+
+      const index = sorted.findIndex((item) => item.address === pda)
+      setRank(index === -1 ? null : index + 1)
+    }
+
+    fetchRank()
+  }, [connected, getLeaderboard, getPlayerPDA])
 
   if (!connected || step !== 'start') return null
   if (!stats) return null
@@ -21,7 +46,7 @@ export default function PanelPlayer() {
     <div className='absolute w-[480px] bottom-5 left-1/2 -translate-x-1/2 pointer-events-auto select-none'>
       <div className='w-full flex justify-between px-10 text-[32px] -top-4 leading-none absolute text-white'>
         <div className='flex items-center gap-2'>
-          <span className='text-player-panel'>#123</span>
+          <span className='text-player-panel'>{rank !== null ? `#${rank}` : '--'}</span>
           <span className='text-player-panel'>You</span>
         </div>
         <span className='text-player-panel'>{formatWalletAddress(publicKey?.toBase58() || '')}</span>
