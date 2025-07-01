@@ -35,3 +35,30 @@ export function parseSecretKey(secretKey: string) {
   const parsedSecretKey = secretKey.split(',').map((num) => Number(num))
   return Keypair.fromSecretKey(Uint8Array.from(parsedSecretKey))
 }
+
+export function abbreviateNumber(n: number, decPlaces = 2, units: string[] = ['k', 'm', 'b', 't']): string | number {
+  const isNegative = n < 0
+  const abbreviatedNumber = _abbreviate(Math.abs(n), decPlaces, units)
+  return isNegative ? `-${abbreviatedNumber}` : abbreviatedNumber
+}
+
+function _abbreviate(num: number, decimalPlaces: number, units: string[]): string | number {
+  const factor = 10 ** decimalPlaces
+
+  for (let i = units.length - 1; i >= 0; i--) {
+    const size = 10 ** ((i + 1) * 3)
+
+    if (size <= num) {
+      let result = Math.round((num * factor) / size) / factor
+
+      if (result === 1000 && i < units.length - 1) {
+        result = 1
+        i++
+      }
+
+      return `${result}${units[i]}`
+    }
+  }
+
+  return num
+}

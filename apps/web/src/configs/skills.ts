@@ -35,9 +35,9 @@ export const ARROWS: Record<Arrow['symbol'], Arrow> = {
 
 export const SKILLS: Skill[] = [
   {
-    id: 'atk-001',
+    id: 'atk-1',
     type: SkillType.Attack,
-    name: 'Punch',
+    name: 'Trash Flash',
     description: 'A basic punch',
     combo: [ARROWS.up, ARROWS.up, ARROWS.left, ARROWS.right, ARROWS.down],
     duration: 1000,
@@ -45,9 +45,9 @@ export const SKILLS: Skill[] = [
     position: new THREE.Vector3(0, 0, 0),
   },
   {
-    id: 'atk-002',
+    id: 'atk-2',
     type: SkillType.Attack,
-    name: 'Kick',
+    name: 'Fire that shit',
     description: 'A basic kick',
     combo: [ARROWS.down, ARROWS.down, ARROWS.left, ARROWS.right, ARROWS.up],
     duration: 500,
@@ -55,9 +55,9 @@ export const SKILLS: Skill[] = [
     position: new THREE.Vector3(0, 0, 0),
   },
   {
-    id: 'atk-003',
+    id: 'atk-3',
     type: SkillType.Attack,
-    name: 'Fireball',
+    name: 'am Cool',
     description: 'A basic fireball',
     combo: [ARROWS.up, ARROWS.down, ARROWS.up, ARROWS.down, ARROWS.right],
     duration: 500,

@@ -1,7 +1,9 @@
+import { BOSS_PUBLIC_KEY } from '@/configs/boss'
 import { SEEDS } from '@/configs/seeds'
 import type { Goroorog } from '@/idl/goroorog'
 import idl from '@/idl/goroorog.json'
 import { parseSecretKey } from '@/libs/utils'
+import { useBoss } from '@/stores/boss'
 import { useDelegate } from '@/stores/delegate'
 import { usePlayer, type ResourceAccount, type SkillAccount, type StatAccount } from '@/stores/player'
 import { AnchorProvider, Program, type Wallet } from '@coral-xyz/anchor'
@@ -14,10 +16,10 @@ export const useProgram = () => {
   const { connection } = useConnection()
 
   const { skills, stats, resources, setSkills, setStats, setResources } = usePlayer()
+  const { skills: bossSkills, stats: bossStats, setSkills: setBossSkills, setStats: setBossStats } = useBoss()
   const { keypair: localKeypair } = useDelegate()
 
   const provider = useMemo(() => new AnchorProvider(connection, wallet as Wallet, { commitment: 'finalized' }), [connection, wallet])
-
   const program = useMemo(() => new Program<Goroorog>(idl, provider), [provider])
 
   async function fetchPlayerData(publicKey: PublicKey) {
@@ -92,5 +94,51 @@ export const useProgram = () => {
     return { skills: computedSkills, stats: computedStats, resources: computedResources }
   }
 
-  return { program, fetchPlayerData }
+  async function fetchBossData() {
+    if (Object.keys(bossSkills).length > 0 && Object.keys(bossStats).length > 0) {
+      return { skills: bossSkills, stats: bossStats }
+    }
+
+    const skillsRequest = program.account.skills.all([
+      {
+        memcmp: {
+          offset: 8, // discriminator (8 bytes)
+          bytes: BOSS_PUBLIC_KEY.toBase58(), // authority
+        },
+      },
+    ])
+    const statsRequest = program.account.stats.all([
+      {
+        memcmp: {
+          offset: 8, // discriminator (8 bytes)
+          bytes: BOSS_PUBLIC_KEY.toBase58(), // authority
+        },
+      },
+    ])
+
+    const [skillsResponse, statsResponse] = await Promise.all([skillsRequest, statsRequest])
+
+    const computedSkills = skillsResponse.reduce(
+      (acc, skill) => {
+        acc[skill.account.skillId] = skill.account
+        return acc
+      },
+      {} as Record<string, SkillAccount>,
+    )
+
+    const computedStats = statsResponse.reduce(
+      (acc, stat) => {
+        acc[stat.account.statId] = stat.account
+        return acc
+      },
+      {} as Record<string, StatAccount>,
+    )
+
+    setBossSkills(computedSkills)
+    setBossStats(computedStats)
+
+    return { skills: computedSkills, stats: computedStats }
+  }
+
+  return { program, fetchPlayerData, fetchBossData }
 }

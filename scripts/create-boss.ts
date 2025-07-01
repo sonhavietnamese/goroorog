@@ -12,16 +12,16 @@ const keypair = Keypair.fromSecretKey(bs58.decode(privateKey))
 
 const connection = new Connection('https://rpc.gorbagana.wtf', 'confirmed')
 
-const BOSS_STATS = [
-  { id: 1, base: new BN(1000000000), level: new BN(1) }, // Health
-  { id: 2, base: new BN(1000), level: new BN(1) }, // Damage
-  { id: 3, base: new BN(1000), level: new BN(1) }, // Speed
+export const BOSS_STATS = [
+  { id: 1, base: new BN(10_000_000_000), level: new BN(1) }, // Health
+  { id: 2, base: new BN(1_000), level: new BN(1) }, // Damage
+  { id: 3, base: new BN(1_000), level: new BN(1) }, // Speed
 ]
 
-const BOSS_SKILLS = [
-  { id: 1, base: new BN(2000), level: new BN(1) }, // Swipe
-  { id: 2, base: new BN(5000), level: new BN(1) }, // Jump
-  { id: 3, base: new BN(1000), level: new BN(1) }, // Scream
+export const BOSS_SKILLS = [
+  { id: 1, base: new BN(2_000), level: new BN(1) }, // Swipe
+  { id: 2, base: new BN(5_000), level: new BN(1) }, // Jump
+  { id: 3, base: new BN(1_000), level: new BN(1) }, // Scream
 ]
 
 const createBossWithStatsAndSkills = async () => {
@@ -34,14 +34,14 @@ const createBossWithStatsAndSkills = async () => {
 
     const program = new Program(idl as Goroorog, provider)
 
-    const bossPDA = PublicKey.findProgramAddressSync([Buffer.from('boss'), Buffer.from([1])], programId)
+    const bossPDA = PublicKey.findProgramAddressSync([Buffer.from('boss'), Buffer.from([3])], programId)
 
     console.log('Boss PDA:', bossPDA[0].toString())
 
     const transaction = new Transaction()
 
     const createBossIx = await program.methods
-      .createBoss(1)
+      .createBoss(3)
       .accounts({
         payer: payer.publicKey,
         boss: bossPDA[0],
@@ -53,7 +53,10 @@ const createBossWithStatsAndSkills = async () => {
     console.log('✓ Added create boss instruction')
 
     for (const stat of BOSS_STATS) {
-      const [statPda] = PublicKey.findProgramAddressSync([Buffer.from('stats'), Buffer.from([stat.id]), bossPDA[0].toBuffer()], programId)
+      const [statPda] = PublicKey.findProgramAddressSync(
+        [Buffer.from('stats'), Buffer.from([stat.id]), bossPDA[0].toBuffer(), payer.publicKey.toBuffer()],
+        programId,
+      )
 
       const createStatIx = await program.methods
         .createStat(stat.id, [stat.base, stat.level])
@@ -70,7 +73,10 @@ const createBossWithStatsAndSkills = async () => {
     }
 
     for (const skill of BOSS_SKILLS) {
-      const [skillPda] = PublicKey.findProgramAddressSync([Buffer.from('skills'), Buffer.from([skill.id]), bossPDA[0].toBuffer()], programId)
+      const [skillPda] = PublicKey.findProgramAddressSync(
+        [Buffer.from('skills'), Buffer.from([skill.id]), bossPDA[0].toBuffer(), payer.publicKey.toBuffer()],
+        programId,
+      )
 
       const createSkillIx = await program.methods
         .createSkill(skill.id, [skill.base, skill.level])

@@ -7,11 +7,11 @@ export default function Skills() {
   const skills = useMagic((state) => state.skills)
 
   return skills.map((skill) =>
-    skill.id.includes('atk-001') ? (
+    skill.id.includes('atk-1') ? (
       <AttackVoid key={skill.id} position={skill.position} />
-    ) : skill.id.includes('atk-002') ? (
+    ) : skill.id.includes('atk-2') ? (
       <AttackFire key={skill.id} position={skill.position} />
-    ) : skill.id.includes('atk-003') ? (
+    ) : skill.id.includes('atk-3') ? (
       <AttackIce key={skill.id} position={skill.position} />
     ) : null,
   )

@@ -10,7 +10,7 @@ import { PublicKey, Transaction, VersionedTransaction } from '@solana/web3.js'
 import { useEffect } from 'react'
 
 export default function PanelFetch() {
-  const { program, fetchPlayerData } = useProgram()
+  const { program, fetchPlayerData, fetchBossData } = useProgram()
   const { keypair: localKeypair } = useDelegate()
   const { publicKey } = useWallet()
   const { setStep } = useOnboarding()
@@ -100,6 +100,11 @@ export default function PanelFetch() {
   useEffect(() => {
     const fetchData = async () => {
       if (!publicKey || !localKeypair) return
+
+      console.log('Fetching boss data')
+      const { skills: bossSkills, stats: bossStats } = await fetchBossData()
+      console.log(bossSkills)
+      console.log(bossStats)
 
       try {
         const payer = parseSecretKey(localKeypair.secretKey)

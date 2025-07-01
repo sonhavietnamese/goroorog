@@ -40,6 +40,42 @@
       0 2px 0 #c143ab;
   }
 
+  .text-boss-panel-name {
+    text-shadow:
+      -3px -3px 0 #000000,
+      3px -3px 0 #000000,
+      -3px 3px 0 #000000,
+      3px 3px 0 #000000,
+      -3px 0 0 #000000,
+      3px 0 0 #000000,
+      0 -3px 0 #000000,
+      0 3px 0 #000000;
+  }
+
+  .text-boss-panel-round {
+    text-shadow:
+      -3px -3px 0 #bf84ff,
+      3px -3px 0 #bf84ff,
+      -3px 3px 0 #bf84ff,
+      3px 3px 0 #bf84ff,
+      -3px 0 0 #bf84ff,
+      3px 0 0 #bf84ff,
+      0 -3px 0 #bf84ff,
+      0 3px 0 #bf84ff;
+  }
+
+  .text-boss-panel-health {
+    text-shadow:
+      -3px -3px 0 #cf8801,
+      3px -3px 0 #cf8801,
+      -3px 3px 0 #cf8801,
+      3px 3px 0 #cf8801,
+      -3px 0 0 #cf8801,
+      3px 0 0 #cf8801,
+      0 -3px 0 #cf8801,
+      0 3px 0 #cf8801;
+  }
+
   .text-panel-leaderboard-0 {
     color: #fff;
     text-shadow:
