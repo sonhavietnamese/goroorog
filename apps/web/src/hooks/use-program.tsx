@@ -290,6 +290,72 @@ export const useProgram = () => {
     console.log('Transaction signature:', signature)
   }
 
+  async function updateResource(id: string) {
+    if (!publicKey || !localKeypair?.secretKey) return
+
+    const payer = parseSecretKey(localKeypair.secretKey)
+
+    const [playerPDA] = PublicKey.findProgramAddressSync([SEEDS.PLAYERS, publicKey.toBuffer(), payer.publicKey.toBuffer()], program.programId)
+    const [resourcePDA] = PublicKey.findProgramAddressSync(
+      [SEEDS.RESOURCES, Buffer.from([Number(id)]), playerPDA.toBuffer(), payer.publicKey.toBuffer()],
+      program.programId,
+    )
+
+    const transaction = new Transaction()
+
+    const updateResourceIx = await program.methods
+      .updateResource([new BN(1)])
+      .accounts({
+        payer: payer.publicKey,
+        owner: playerPDA,
+        resource: resourcePDA,
+      })
+      .instruction()
+
+    transaction.add(updateResourceIx)
+
+    const { blockhash } = await GORBAGANA_CONNECTION.getLatestBlockhash()
+    transaction.recentBlockhash = blockhash
+    transaction.feePayer = payer.publicKey
+
+    const message = transaction.compileMessage()
+    const versionedTransaction = new VersionedTransaction(message)
+    versionedTransaction.sign([payer])
+    const signature = await GORBAGANA_CONNECTION.sendTransaction(versionedTransaction)
+    console.log('Transaction signature:', signature)
+  }
+
+  async function getResource() {
+    if (!publicKey || !localKeypair?.secretKey) return
+
+    const payer = parseSecretKey(localKeypair.secretKey)
+
+    const [playerPDA] = PublicKey.findProgramAddressSync([SEEDS.PLAYERS, publicKey.toBuffer(), payer.publicKey.toBuffer()], program.programId)
+
+    const resourceRequest = program.account.resources.all([
+      {
+        memcmp: {
+          offset: 8, // discriminator (8 bytes)
+          bytes: playerPDA.toBase58(), // authority
+        },
+      },
+    ])
+
+    const [resourceResponse] = await Promise.all([resourceRequest])
+
+    const computedResource = resourceResponse.reduce(
+      (acc, resource) => {
+        acc[resource.account.resourceId] = resource.account
+        return acc
+      },
+      {} as Record<string, ResourceAccount>,
+    )
+
+    setResources(computedResource)
+
+    return computedResource
+  }
+
   async function getMyHistory() {
     if (!publicKey || !localKeypair?.secretKey) return
 
@@ -355,5 +421,16 @@ export const useProgram = () => {
     return history
   }
 
-  return { program, fetchPlayerData, fetchBossData, createPlayer, updateHistory, getMyHistory, getLeaderboard, getPlayerPDA }
+  return {
+    program,
+    fetchPlayerData,
+    fetchBossData,
+    createPlayer,
+    updateHistory,
+    getMyHistory,
+    getLeaderboard,
+    getPlayerPDA,
+    updateResource,
+    getResource,
+  }
 }

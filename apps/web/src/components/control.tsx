@@ -217,6 +217,9 @@ const Control = forwardRef<ControlApi, ControlProps>(
     const scaledFloatRadiusVec = useRef<THREE.Vector3>(new THREE.Vector3())
     const deltaHit = useRef<THREE.Vector3>(new THREE.Vector3())
 
+    // Keep track of resources we have already collided with during this play-session
+    const resourceHitIds = useRef<Set<string>>(new Set())
+
     /**
      * Gravity funtion
      */
@@ -387,6 +390,15 @@ const Control = forwardRef<ControlApi, ControlProps>(
           accumulatedContactNormal.current.normalize()
           accumulatedContactPoint.current.divideScalar(triangleCount.current)
           const avgDepth = totalDepth.current / triangleCount.current
+
+          // ------------------------------------------------------
+          // Collision callbacks for game objects
+          // ------------------------------------------------------
+          // Check if this mesh is a resource and log once per resource
+          if (mesh.name && mesh.name.startsWith('resource-') && !resourceHitIds.current.has(mesh.name)) {
+            console.log('hit')
+            resourceHitIds.current.add(mesh.name)
+          }
 
           /**
            * Compute relative contact velocity on different type of platforms (STATIC/KINEMATIC)

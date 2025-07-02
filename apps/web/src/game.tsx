@@ -3,6 +3,7 @@ import Ground from '@/components/ground'
 import { ManagerSkill } from '@/components/manager-skill'
 import PlayerLocal from '@/components/player-local'
 import PlayerRemote from '@/components/player-remote'
+import ResourceRemote from '@/components/resource-remote'
 import { Bloom, EffectComposer } from '@react-three/postprocessing'
 
 export default function Game() {
@@ -25,6 +26,8 @@ export default function Game() {
       </EffectComposer>
 
       <ManagerSkill />
+
+      <ResourceRemote />
     </>
   )
 }

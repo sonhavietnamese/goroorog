@@ -98,6 +98,9 @@ const StaticCollider = forwardRef<THREE.Group, StaticColliderProps>(
 
       useControlStore.getState().setColliderMeshesArray(mergedMesh.current)
 
+      // Propagate the group's name to the merged mesh (useful for later identification, e.g. "resource-<id>")
+      if (props.name) mergedMesh.current.name = props.name as string
+
       return () => {
         if (mergedMesh.current) {
           useControlStore.getState().removeColliderMesh(mergedMesh.current)
