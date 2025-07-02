@@ -24,6 +24,7 @@
       "version": "0.0.1",
       "dependencies": {
         "encore.dev": "^1.48.2",
+        "firebase": "^11.10.0",
       },
       "devDependencies": {
         "@types/node": "^20.5.7",
