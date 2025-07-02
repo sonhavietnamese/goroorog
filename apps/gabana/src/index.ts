@@ -7,24 +7,16 @@ import { generateResouceId, randomInRange } from './libs/utils'
 const app = new Elysia()
   .use(
     cron({
-      name: 'heartbeat',
-      pattern: '*/10 * * * * *',
-      run() {
-        console.log('Heartbeat')
-      },
-    }),
-  )
-  .use(
-    cron({
       name: 'spawn-resource',
       pattern: '*/10 * * * * *',
       async run() {
+        console.log('[GABANA] Spawning resource')
         const resourcesRef = ref(database, 'resources')
         const resourcesSnapshot = await get(resourcesRef)
         const resourcesCount = resourcesSnapshot.exists() ? Object.keys(resourcesSnapshot.val()).length : 0
 
         if (resourcesCount >= 10) {
-          console.log('Max resources reached, skipping spawn')
+          console.log('[GABANA][XX] Max resources reached, skipping spawn')
           return
         }
 
@@ -37,6 +29,8 @@ const app = new Elysia()
             z: randomInRange(-50, 50),
           },
         })
+
+        console.log('[GABANA][OO] Spawned resource')
       },
     }),
   )
