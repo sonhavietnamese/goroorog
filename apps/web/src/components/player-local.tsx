@@ -68,7 +68,7 @@ export default function PlayerLocal() {
 
         set(ref(database, `users/${user.uid}`), {
           ...payload.current,
-          position: [characterStatus.position.x, characterStatus.position.y - 0.7, characterStatus.position.z],
+          position: [characterStatus.position.x, characterStatus.position.y, characterStatus.position.z],
           animation: characterStatus.animationStatus,
           quaternion: [characterStatus.quaternion.x, characterStatus.quaternion.y, characterStatus.quaternion.z, characterStatus.quaternion.w],
         })
@@ -95,7 +95,7 @@ export default function PlayerLocal() {
           acceleration={100}
           position={spawnPoint.current}>
           <Bana animation={ANIMATION_MAP[characterStatus.animationStatus]} />
-          <mesh ref={playerIndicatorRef} position={[0, -0.7, 0]} rotation={[-Math.PI / 2, 0, 0]} dispose={null}>
+          <mesh ref={playerIndicatorRef} position={[0, -0.5, 0]} rotation={[-Math.PI / 2, 0, 0]} dispose={null}>
             <planeGeometry args={[4, 4]} />
             <meshStandardMaterial map={playerIndicatorTexture} transparent />
           </mesh>

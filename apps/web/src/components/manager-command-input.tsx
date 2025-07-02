@@ -1,15 +1,19 @@
 import { ARROWS, MAX_COMBO_LENGTH, SKILLS } from '@/configs/skills'
 import { useMagic } from '@/hooks/use-magic'
+import { useProgram } from '@/hooks/use-program'
+import { database } from '@/libs/firebase'
 import { randomInRange } from '@/libs/utils'
-import type { Arrow } from '@/types'
+import { useAuthStore } from '@/stores/auth'
+import type { Arrow, Skill } from '@/types'
+import { ref, set } from 'firebase/database'
 import { useEffect, useState } from 'react'
 import * as THREE from 'three'
-import { useProgram } from '@/hooks/use-program'
 
 export default function ManagerCommandInput() {
   const [combos, setCombos] = useState<Arrow[]>([])
   const addSkill = useMagic((state) => state.addSkill)
-  const { updateHistory, getHistory } = useProgram()
+  const { updateHistory, getLeaderboard } = useProgram()
+  const { user } = useAuthStore()
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -51,15 +55,25 @@ export default function ManagerCommandInput() {
         if (validSkill) {
           const timestamp = Date.now()
 
-          addSkill({
+          const skill: Skill = {
             ...validSkill,
             id: `${validSkill.id}-${timestamp}`,
             position: new THREE.Vector3(randomInRange(-5, 5), 0, randomInRange(-5, 5)),
             timestamp,
-          })
+          }
+
+          addSkill(skill)
 
           await updateHistory()
-          await getHistory()
+          set(ref(database, 'skills/' + timestamp), {
+            ...validSkill,
+            id: `${validSkill.id}-${timestamp}-${user?.uid}`,
+            position: new THREE.Vector3(randomInRange(-5, 5), 0, randomInRange(-5, 5)),
+            duration: validSkill.duration,
+            type: validSkill.type,
+            timestamp,
+          })
+          await getLeaderboard()
         }
 
         setCombos([])

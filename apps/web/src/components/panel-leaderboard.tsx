@@ -1,36 +1,40 @@
 import aSampleLeaderboard from '@/assets/elements/panel-leaderboard.png'
 import { useProgram } from '@/hooks/use-program'
 import { abbreviateNumber, cn, formatWalletAddress } from '@/libs/utils'
-import { usePlayer } from '@/stores/player'
+import { useBoss } from '@/stores/boss'
 import type { BN } from '@coral-xyz/anchor'
 import { useEffect, useState } from 'react'
 
 export default function PanelLeaderboard() {
-  const { history } = usePlayer()
-  const { getLeaderboard, getPlayerPDA } = useProgram()
+  const { history } = useBoss()
+  const { getPlayerPDA } = useProgram()
   const [leaderboard, setLeaderboard] = useState<{ address: string; value: BN }[]>([])
   const [shouldShowYou, setShouldShowYou] = useState(false)
   const [playerPDA, setPlayerPDA] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
-      const playerPDA = getPlayerPDA()?.toBase58()
-      const leaderboard = await getLeaderboard()
-      const sortedLeaderboard = leaderboard.sort((a, b) => b.value.toNumber() - a.value.toNumber())
+      if (Object.keys(history).length === 0) return
 
-      // Take the top 7 records to check if the current player is included
+      const playerPDA = getPlayerPDA()?.toBase58() || null
+      const sortedLeaderboard = Object.values(history).sort((a, b) => b.value.toNumber() - a.value.toNumber())
+
       const topSeven = sortedLeaderboard.slice(0, 7)
-      const playerInTopSeven = playerPDA ? topSeven.some((item) => item.address === playerPDA) : false
+      const playerInTopSeven = playerPDA ? topSeven.some((item) => item.from.toBase58() === playerPDA) : false
 
       setShouldShowYou(!playerInTopSeven)
       setPlayerPDA(playerPDA || null)
 
-      // If the player is in the top 7, show all 7; otherwise, show the top 6 and add "You" manually later
-      setLeaderboard(playerInTopSeven ? topSeven : sortedLeaderboard.slice(0, 6))
+      setLeaderboard(
+        (playerInTopSeven ? topSeven : sortedLeaderboard.slice(0, 6)).map((item) => ({
+          address: item.from.toBase58(),
+          value: item.value,
+        })),
+      )
     }
 
     fetchLeaderboard()
-  }, [])
+  }, [history])
 
   return (
     <div className='absolute top-10 right-5 w-[360px]'>
@@ -51,7 +55,7 @@ export default function PanelLeaderboard() {
             )
           })}
 
-          {shouldShowYou && (
+          {shouldShowYou && playerPDA && (
             <div className='flex justify-between h-[44px] text-[60px]'>
               <span className={cn('text-white text-[24px]')}>You</span>
               <span className={cn('text-white text-[24px]')}>{abbreviateNumber(history[1].value.toNumber())}</span>

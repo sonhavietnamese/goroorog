@@ -19,7 +19,7 @@ export const useProgram = () => {
   const { connection } = useConnection()
 
   const { skills, stats, resources, history, setSkills, setStats, setResources, setHistory } = usePlayer()
-  const { skills: bossSkills, stats: bossStats, setSkills: setBossSkills, setStats: setBossStats } = useBoss()
+  const { skills: bossSkills, stats: bossStats, setSkills: setBossSkills, setStats: setBossStats, setHistory: setBossHistory } = useBoss()
   const { keypair: localKeypair } = useDelegate()
 
   const provider = useMemo(() => new AnchorProvider(connection, wallet as Wallet, { commitment: 'finalized' }), [connection, wallet])
@@ -290,7 +290,7 @@ export const useProgram = () => {
     console.log('Transaction signature:', signature)
   }
 
-  async function getHistory() {
+  async function getMyHistory() {
     if (!publicKey || !localKeypair?.secretKey) return
 
     const payer = parseSecretKey(localKeypair.secretKey)
@@ -342,11 +342,18 @@ export const useProgram = () => {
     ])
 
     const [historyResponse] = await Promise.all([historyRequest])
-    return historyResponse.map((history) => ({
-      address: history.account.from.toBase58(),
-      value: history.account.value,
-    }))
+    const history = historyResponse.reduce(
+      (acc, history) => {
+        acc[history.account.from.toBase58()] = history.account
+        return acc
+      },
+      {} as Record<string, HistoryAccount>,
+    )
+
+    setBossHistory(history)
+
+    return history
   }
 
-  return { program, fetchPlayerData, fetchBossData, createPlayer, updateHistory, getHistory, getLeaderboard, getPlayerPDA }
+  return { program, fetchPlayerData, fetchBossData, createPlayer, updateHistory, getMyHistory, getLeaderboard, getPlayerPDA }
 }

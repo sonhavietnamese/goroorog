@@ -5,6 +5,7 @@ import * as THREE from 'three'
 import { lerp } from 'three/src/math/MathUtils.js'
 import Skills from './skills'
 import VFXS from './vfxs'
+import SkillRemote from './skill-remote'
 
 export const ManagerSkill = ({ ...props }) => {
   const update = useMagic((state) => state.update)
@@ -29,25 +30,7 @@ export const ManagerSkill = ({ ...props }) => {
     <group {...props}>
       <VFXS />
       <Skills />
-      {/* <mesh
-        receiveShadow
-        rotation-x={-Math.PI / 2}
-        position-y={0.001}
-        onPointerMove={(e) => pointerPosition.current.set(e.point.x, e.point.y + 0.001, e.point.z)}
-        onClick={() => {
-          addSkill({
-            ...skill,
-            position: pointerPosition.current.clone(),
-            timestamp: Date.now(),
-          })
-        }}>
-        <planeGeometry args={[100, 100]} />
-        <shadowMaterial opacity={0.4} transparent />
-      </mesh>
-      <mesh ref={pointer} rotation-x={degToRad(-90)}>
-        <circleGeometry args={[0.1, 32]} />
-        <meshStandardMaterial emissive={skill.colors[0]} emissiveIntensity={2.5} />
-      </mesh> */}
+      <SkillRemote />
     </group>
   )
 }

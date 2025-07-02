@@ -19,7 +19,7 @@ export default function PanelPlayer() {
       if (!connected) return
 
       const leaderboard = await getLeaderboard()
-      const sorted = leaderboard.sort((a, b) => b.value.toNumber() - a.value.toNumber())
+      const sorted = Object.values(leaderboard).sort((a, b) => b.value.toNumber() - a.value.toNumber())
       const pda = getPlayerPDA()?.toBase58()
 
       if (!pda) {
@@ -27,12 +27,12 @@ export default function PanelPlayer() {
         return
       }
 
-      const index = sorted.findIndex((item) => item.address === pda)
+      const index = sorted.findIndex((item) => item.from.toBase58() === pda)
       setRank(index === -1 ? null : index + 1)
     }
 
     fetchRank()
-  }, [connected, getLeaderboard, getPlayerPDA])
+  }, [connected, history])
 
   if (!connected || step !== 'start') return null
   if (!stats) return null

@@ -7,14 +7,29 @@ import { useEffect, useState } from 'react'
 import ButtonConnect from './button-connect'
 import PanelDelegate from './panel-delegate'
 import PanelFetch from './panel-fetch'
+import { useProgram } from '@/hooks/use-program'
 
 export default function Onboarding() {
   const { connected, publicKey } = useWallet()
   const { keypair, generateKeypair } = useDelegate()
   const { step, setStep } = useOnboarding()
   const { connection } = useConnection()
+  const { getLeaderboard, fetchBossData } = useProgram()
 
   const [isFetching, setIsFetching] = useState(false)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchBossData()
+      await getLeaderboard()
+    }
+
+    const interval = setInterval(() => {
+      fetchData()
+    }, 3000)
+
+    return () => clearInterval(interval)
+  }, [])
 
   useEffect(() => {
     if (!keypair || !keypair.publicKey || !keypair.secretKey) {

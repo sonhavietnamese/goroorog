@@ -17,10 +17,7 @@ export default function PanelFetch() {
     const fetchData = async () => {
       if (!publicKey || !localKeypair) return
 
-      console.log('Fetching boss data')
-      const { skills: bossSkills, stats: bossStats } = await fetchBossData()
-      console.log(bossSkills)
-      console.log(bossStats)
+      await fetchBossData()
 
       try {
         const payer = parseSecretKey(localKeypair.secretKey)
