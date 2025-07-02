@@ -1,0 +1,46 @@
+# Dependencies
+node_modules
+*.log
+
+# Development files
+.env.local
+.env.development
+.env.test
+
+# Build outputs
+dist
+build
+
+# Version control
+.git
+.gitignore
+
+# IDE files
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker files
+Dockerfile*
+.dockerignore
+
+# Documentation
+README.md
+*.md
+
+# Test files
+__tests__
+*.test.*
+*.spec.*
+
+# Coverage reports
+coverage
+
+# Temporary files
+tmp
+temp 
