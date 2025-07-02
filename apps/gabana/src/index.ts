@@ -1,8 +1,8 @@
 import cron from '@elysiajs/cron'
 import { Elysia } from 'elysia'
+import { get, ref, set, update } from 'firebase/database'
 import { database } from './libs/firebase'
-import { get, ref, set } from 'firebase/database'
-import { generateResouceId, generateSkillId, randomInRange } from './libs/utils'
+import { generatePlayerSkill, generateResouceId, generateSkillId, randomInRange } from './libs/utils'
 
 const app = new Elysia()
   .use(
@@ -15,7 +15,7 @@ const app = new Elysia()
         const resourcesSnapshot = await get(resourcesRef)
         const resourcesCount = resourcesSnapshot.exists() ? Object.keys(resourcesSnapshot.val()).length : 0
 
-        if (resourcesCount >= 10) {
+        if (resourcesCount >= 50) {
           console.log('[GABANA][XX] Max resources reached, skipping spawn')
           return
         }
@@ -48,6 +48,45 @@ const app = new Elysia()
         })
 
         console.log('[BOSS][OO] Updated skill')
+      },
+    }),
+  )
+  .use(
+    cron({
+      name: 'player-skill',
+      pattern: '*/4 * * * * *',
+      async run() {
+        console.log('[PLAYER] Skill')
+
+        const skill = generatePlayerSkill()
+
+        // delete all skills with key is timestamp less than 10 seconds
+        const skillsRef = ref(database, 'skills')
+        const skillsSnapshot = await get(skillsRef)
+        const skills = skillsSnapshot.val()
+        const keysToRemove = Object.keys(skills).filter((key) => Date.now() - Number(key) < 5000)
+        if (keysToRemove.length > 0) {
+          const updates: Record<string, any> = {}
+          keysToRemove.forEach((key) => {
+            updates[`skills/${key}`] = null
+          })
+          update(ref(database), updates)
+        }
+
+        const timestamp = Date.now()
+
+        set(ref(database, 'skills/' + timestamp), {
+          ...skill,
+          id: `${skill.id}-${timestamp}-bot`,
+          position: {
+            x: randomInRange(-10, 10),
+            y: 0,
+            z: randomInRange(-10, 10),
+          },
+          timestamp,
+        })
+
+        console.log('[PLAYER][OO] Spawned skill')
       },
     }),
   )

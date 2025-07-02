@@ -10,11 +10,12 @@ import { CameraControls, KeyboardControls, useTexture } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { ref, set } from 'firebase/database'
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import Control, { type ControlApi } from './control'
 import Bana from './player-bana'
 import { useCameraStore } from '@/stores/camera'
+import { usePlayer } from '@/stores/player'
 
 const THRESHOLD_DISTANCE = 0.2
 
@@ -24,6 +25,7 @@ export default function PlayerLocal() {
   const lightRef = useRef<THREE.DirectionalLight | null>(null)
   const spawnPoint = useRef<THREE.Vector3>(getRandomSpawnPoint())
   const playerIndicatorRef = useRef<THREE.Mesh | null>(null)
+  const { stats } = usePlayer()
 
   const colliderMeshesArray = useControlStore((state) => state.colliderMeshesArray)
   const characterStatus = useControlStore((state) => state.characterStatus)
@@ -43,6 +45,22 @@ export default function PlayerLocal() {
     animation: 'IDLE',
   })
 
+  const multiplier = useMemo(() => {
+    if (stats && stats[3] && stats[5]) {
+      return {
+        walkSpeed: stats[3].level.toNumber() / 2,
+        runSpeed: stats[3].level.toNumber() / 2,
+        jumpVel: stats[5].level.toNumber() / 2,
+      }
+    }
+
+    return {
+      walkSpeed: 1,
+      runSpeed: 1,
+      jumpVel: 1,
+    }
+  }, [stats])
+
   useEffect(() => {
     if (publicKey && user) {
       payload.current.address = publicKey.toBase58()
@@ -60,12 +78,12 @@ export default function PlayerLocal() {
       const baseZ = controlRef.current.group.position.z
 
       // Add shake offset if camera shaking is enabled
-      let shakeOffsetX = 0.0025
-      let shakeOffsetY = 0.0025
-      let shakeOffsetZ = 0.0025
+      let shakeOffsetX = 0
+      let shakeOffsetY = 0
+      let shakeOffsetZ = 0
 
       if (shouldShakeCamera) {
-        const shakeIntensity = 10
+        const shakeIntensity = 1
         shakeOffsetX = (Math.random() - 0.5) * shakeIntensity
         shakeOffsetY = (Math.random() - 0.5) * shakeIntensity
         shakeOffsetZ = (Math.random() - 0.5) * shakeIntensity
@@ -102,9 +120,9 @@ export default function PlayerLocal() {
       <KeyboardControls map={KEYBOARD_MAP}>
         <Control
           ref={controlRef}
-          maxWalkSpeed={10}
-          maxRunSpeed={20}
-          jumpVel={10}
+          maxWalkSpeed={10 + multiplier.walkSpeed}
+          maxRunSpeed={20 + multiplier.runSpeed}
+          jumpVel={10 + multiplier.jumpVel}
           counterVelFactor={0}
           deceleration={100}
           acceleration={100}

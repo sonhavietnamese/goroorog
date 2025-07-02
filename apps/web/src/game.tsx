@@ -10,7 +10,7 @@ export default function Game() {
   return (
     <>
       <color attach='background' args={['#000000']} />
-      {/* <fog attach='fog' args={['#000000', 10, 150]} /> */}
+      <fog attach='fog' args={['#000000', 10, 150]} />
 
       <ambientLight intensity={2} />
 

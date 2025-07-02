@@ -2,6 +2,7 @@ import aSampleLeaderboard from '@/assets/elements/panel-leaderboard.png'
 import { useProgram } from '@/hooks/use-program'
 import { abbreviateNumber, cn, formatWalletAddress } from '@/libs/utils'
 import { useBoss } from '@/stores/boss'
+import { useOnboarding } from '@/stores/onboarding'
 import type { BN } from '@coral-xyz/anchor'
 import { useEffect, useState } from 'react'
 
@@ -11,6 +12,7 @@ export default function PanelLeaderboard() {
   const [leaderboard, setLeaderboard] = useState<{ address: string; value: BN }[]>([])
   const [shouldShowYou, setShouldShowYou] = useState(false)
   const [playerPDA, setPlayerPDA] = useState<string | null>(null)
+  const { step } = useOnboarding()
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
@@ -55,7 +57,7 @@ export default function PanelLeaderboard() {
             )
           })}
 
-          {shouldShowYou && playerPDA && (
+          {shouldShowYou && playerPDA && step === 'start' && (
             <div className='flex justify-between h-[44px] text-[60px]'>
               <span className={cn('text-white text-[24px]')}>You</span>
               <span className={cn('text-white text-[24px]')}>{abbreviateNumber(history[1].value.toNumber())}</span>

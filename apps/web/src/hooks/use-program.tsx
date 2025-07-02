@@ -269,7 +269,7 @@ export const useProgram = () => {
     const transaction = new Transaction()
 
     const updateHistoryIx = await program.methods
-      .updateHistory([new BN(1000)])
+      .updateHistory([new BN(1000 * stats[2].level.toNumber())])
       .accounts({
         payer: payer.publicKey,
         owner: playerPDA,
@@ -323,6 +323,77 @@ export const useProgram = () => {
     versionedTransaction.sign([payer])
     const signature = await GORBAGANA_CONNECTION.sendTransaction(versionedTransaction)
     console.log('Transaction signature:', signature)
+  }
+
+  async function updateStat(resourceId: string, statId: string) {
+    if (!publicKey || !localKeypair?.secretKey) return
+
+    const payer = parseSecretKey(localKeypair.secretKey)
+
+    const [playerPDA] = PublicKey.findProgramAddressSync([SEEDS.PLAYERS, publicKey.toBuffer(), payer.publicKey.toBuffer()], program.programId)
+    const [statPDA] = PublicKey.findProgramAddressSync(
+      [SEEDS.STATS, Buffer.from([Number(statId)]), playerPDA.toBuffer(), payer.publicKey.toBuffer()],
+      program.programId,
+    )
+    const [resourcePDA] = PublicKey.findProgramAddressSync(
+      [SEEDS.RESOURCES, Buffer.from([Number(resourceId)]), playerPDA.toBuffer(), payer.publicKey.toBuffer()],
+      program.programId,
+    )
+
+    const transaction = new Transaction()
+
+    const updateStatIx = await program.methods
+      .updateStat([new BN(statId), new BN(resourceId)])
+      .accounts({
+        payer: payer.publicKey,
+        owner: playerPDA,
+        stat: statPDA,
+        resource: resourcePDA,
+      })
+      .instruction()
+
+    transaction.add(updateStatIx)
+
+    const { blockhash } = await GORBAGANA_CONNECTION.getLatestBlockhash()
+    transaction.recentBlockhash = blockhash
+    transaction.feePayer = payer.publicKey
+
+    const message = transaction.compileMessage()
+    const versionedTransaction = new VersionedTransaction(message)
+    versionedTransaction.sign([payer])
+    const signature = await GORBAGANA_CONNECTION.sendTransaction(versionedTransaction)
+    console.log('Transaction signature:', signature)
+  }
+
+  async function getStat() {
+    if (!publicKey || !localKeypair?.secretKey) return
+
+    const payer = parseSecretKey(localKeypair.secretKey)
+
+    const [playerPDA] = PublicKey.findProgramAddressSync([SEEDS.PLAYERS, publicKey.toBuffer(), payer.publicKey.toBuffer()], program.programId)
+
+    const statRequest = program.account.stats.all([
+      {
+        memcmp: {
+          offset: 8, // discriminator (8 bytes)
+          bytes: playerPDA.toBase58(), // authority
+        },
+      },
+    ])
+
+    const [statResponse] = await Promise.all([statRequest])
+
+    const computedStat = statResponse.reduce(
+      (acc, stat) => {
+        acc[stat.account.statId] = stat.account
+        return acc
+      },
+      {} as Record<string, StatAccount>,
+    )
+
+    setStats(computedStat)
+
+    return computedStat
   }
 
   async function getResource() {
@@ -432,5 +503,7 @@ export const useProgram = () => {
     getPlayerPDA,
     updateResource,
     getResource,
+    updateStat,
+    getStat,
   }
 }
