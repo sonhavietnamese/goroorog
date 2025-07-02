@@ -1,5 +1,7 @@
+import { database } from '@/libs/firebase'
 import { useFrame } from '@react-three/fiber'
-import { useRef } from 'react'
+import { onValue, ref } from 'firebase/database'
+import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 import Gor from './gor'
 
@@ -7,10 +9,28 @@ const BASE_INNER_RADIUS = 1
 const BASE_OUTER_RADIUS = 2
 const SEGMENTS = 32
 
+type ActionName = 'breath' | 'roar' | 'jump-attack' | 'swipe'
+
+const ACTIONS: Record<string, ActionName> = {
+  '1': 'swipe',
+  '2': 'roar',
+  '3': 'jump-attack',
+}
+
 export default function Boss() {
   const ring = useRef<THREE.Mesh>(null)
-
   const count = useRef(0)
+
+  const [skill, setSkill] = useState<string>('breath')
+
+  useEffect(() => {
+    const bossRef = ref(database, 'boss')
+    const unsubscribe = onValue(bossRef, (snapshot) => {
+      setSkill(snapshot.val().skill || '1')
+    })
+
+    return () => unsubscribe()
+  }, [])
 
   useFrame((state) => {
     if (ring.current) {
@@ -30,7 +50,7 @@ export default function Boss() {
 
   return (
     <group>
-      <Gor scale={10} position={[0, -0.5, 0]} />
+      <Gor scale={10} position={[0, -0.5, 0]} animation={ACTIONS[skill]} />
 
       {/* <mesh ref={ring} position={[-3, -0.4, 12]} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[BASE_INNER_RADIUS, BASE_OUTER_RADIUS, SEGMENTS]} />

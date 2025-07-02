@@ -1,6 +1,7 @@
+import { useCameraStore } from '@/stores/camera'
 import { useAnimations, useGLTF } from '@react-three/drei'
 import { useGraph } from '@react-three/fiber'
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, type JSX } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, type JSX } from 'react'
 import * as THREE from 'three'
 import { SkeletonUtils, type GLTF } from 'three-stdlib'
 
@@ -22,22 +23,50 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-const Gor = forwardRef<THREE.Group, JSX.IntrinsicElements['group']>((props, ref) => {
+type GorProps = JSX.IntrinsicElements['group'] & {
+  animation?: ActionName
+}
+
+const Gor = forwardRef<THREE.Group, GorProps>(({ animation = 'idle', ...props }, ref) => {
   const group = useRef<THREE.Group>(null)
   const { scene, animations } = useGLTF('/gor-transformed.glb')
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { nodes, materials } = useGraph(clone) as unknown as GLTFResult
-  const { actions } = useAnimations(animations, group)
+  const { actions, mixer } = useAnimations(animations, group)
+  const { startShake } = useCameraStore()
+
+  const [internalAnimation, setInternalAnimation] = useState<ActionName>(animation)
 
   useImperativeHandle(ref, () => group.current as THREE.Group, [])
 
   useEffect(() => {
-    actions['idle']?.reset().fadeIn(0.5).play()
+    const customAnim = internalAnimation === 'idle' ? 'idle' : internalAnimation
+    const action = actions[customAnim] as THREE.AnimationAction
+
+    if (internalAnimation === 'jump-attack' || internalAnimation === 'roar' || internalAnimation === 'swipe') {
+      action?.reset().fadeIn(0.2).setLoop(THREE.LoopOnce, 1).play()
+      action.clampWhenFinished = true
+      startShake()
+    } else {
+      action?.reset().fadeIn(0.2).play()
+    }
+
+    const reset = () => {
+      setInternalAnimation('idle')
+    }
+
+    mixer.addEventListener('finished', reset)
 
     return () => {
-      actions['idle']?.fadeOut(0.5)
+      action.fadeOut(0.2)
+
+      mixer.removeEventListener('finished', reset)
     }
-  }, [actions])
+  }, [internalAnimation, actions])
+
+  useEffect(() => {
+    setInternalAnimation(animation)
+  }, [animation])
 
   return (
     <group ref={group} {...props} dispose={null}>

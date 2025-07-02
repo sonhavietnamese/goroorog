@@ -2,7 +2,7 @@ import cron from '@elysiajs/cron'
 import { Elysia } from 'elysia'
 import { database } from './libs/firebase'
 import { get, ref, set } from 'firebase/database'
-import { generateResouceId, randomInRange } from './libs/utils'
+import { generateResouceId, generateSkillId, randomInRange } from './libs/utils'
 
 const app = new Elysia()
   .use(
@@ -31,6 +31,23 @@ const app = new Elysia()
         })
 
         console.log('[GABANA][OO] Spawned resource')
+      },
+    }),
+  )
+  .use(
+    cron({
+      name: 'boss-skill',
+      pattern: '*/5 * * * * *',
+      async run() {
+        console.log('[BOSS] Skill')
+
+        const skill = generateSkillId()
+
+        set(ref(database, 'boss'), {
+          skill,
+        })
+
+        console.log('[BOSS][OO] Updated skill')
       },
     }),
   )

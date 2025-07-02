@@ -14,6 +14,7 @@ import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import Control, { type ControlApi } from './control'
 import Bana from './player-bana'
+import { useCameraStore } from '@/stores/camera'
 
 const THRESHOLD_DISTANCE = 0.2
 
@@ -27,6 +28,7 @@ export default function PlayerLocal() {
   const colliderMeshesArray = useControlStore((state) => state.colliderMeshesArray)
   const characterStatus = useControlStore((state) => state.characterStatus)
   const { user } = useAuthStore()
+  const { shouldShakeCamera } = useCameraStore()
 
   const { publicKey } = useWallet()
 
@@ -52,12 +54,25 @@ export default function PlayerLocal() {
 
   useFrame(() => {
     if (controlRef.current && controlRef.current.group && camControlRef.current && lightRef.current) {
-      camControlRef.current.moveTo(
-        controlRef.current.group.position.x,
-        controlRef.current.group.position.y + 3,
-        controlRef.current.group.position.z,
-        true,
-      )
+      // Calculate base camera position following the character
+      const baseX = controlRef.current.group.position.x
+      const baseY = controlRef.current.group.position.y + 3
+      const baseZ = controlRef.current.group.position.z
+
+      // Add shake offset if camera shaking is enabled
+      let shakeOffsetX = 0.0025
+      let shakeOffsetY = 0.0025
+      let shakeOffsetZ = 0.0025
+
+      if (shouldShakeCamera) {
+        const shakeIntensity = 10
+        shakeOffsetX = (Math.random() - 0.5) * shakeIntensity
+        shakeOffsetY = (Math.random() - 0.5) * shakeIntensity
+        shakeOffsetZ = (Math.random() - 0.5) * shakeIntensity
+      }
+
+      // Apply camera position with shake
+      camControlRef.current.moveTo(baseX + shakeOffsetX, baseY + shakeOffsetY, baseZ + shakeOffsetZ, true)
 
       lightRef.current.position.set(controlRef.current?.group.position.x ?? 0, 5, controlRef.current?.group.position.z)
 
