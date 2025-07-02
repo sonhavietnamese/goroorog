@@ -4,8 +4,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run --watch src/index.ts",
-    "build": "bun build src/index.ts --outfile gabana",
-    "start": "bun run gabana"
+    "build": "bun build src/index.ts --outfile gabana --target=bun",
+    "start": "./gabana"
   },
   "dependencies": {
     "@elysiajs/cron": "^1.3.0",
