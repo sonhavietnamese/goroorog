@@ -58,7 +58,7 @@ export const spawnResource = api({}, async () => {
 
 const _ = new CronJob('spawn-resource', {
   title: 'Spawn resource',
-  every: '10s',
+  schedule: '*/10 * * * * *',
   endpoint: spawnResource,
 })
 
